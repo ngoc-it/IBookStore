@@ -1,0 +1,107 @@
+﻿/* Định nghĩa kiểu cho phần thông báo toast */
+.toast {
+    width: 350px; /* Độ rộng cố định cho toast */
+    max-width: 100%; /* Đảm bảo không vượt quá chiều rộng của phần tử chứa */
+    font-size: 0.9375rem; /* Kích thước chữ */
+    pointer-events: auto; /* Cho phép tương tác với toast */
+    background-color: #fff; /* Màu nền trắng */
+    background-clip: padding-box; /* Cắt nền ở phần padding */
+    border: 0 solid rgba(67, 89, 113, 0.1); /* Không có đường viền */
+    box-shadow: 0 0.25rem 1rem rgba(161, 172, 184, 0.45); /* Đổ bóng cho toast */
+    border-radius: 0.5rem; /* Bo tròn các góc */
+}
+
+    /* Hiệu ứng khi toast đang hiển thị */
+    .toast.showing {
+        opacity: 0; /* Ẩn toast bằng cách đặt độ mờ */
+    }
+
+    /* Nếu không có lớp 'show', toast sẽ không hiển thị */
+    .toast:not(.show) {
+        display: none; /* Ẩn toast khi không được hiển thị */
+    }
+
+/* Container chứa các toast */
+.toast-container {
+    width: -webkit-max-content; /* Tương thích với trình duyệt WebKit */
+    width: -moz-max-content; /* Tương thích với trình duyệt Firefox */
+    width: max-content; /* Đo chiều rộng tối đa của nội dung */
+    max-width: 100%; /* Không vượt quá chiều rộng của phần tử chứa */
+    pointer-events: none; /* Không cho phép tương tác với container */
+}
+
+    /* Tạo khoảng cách giữa các toast */
+    .toast-container > :not(:last-child) {
+        margin-bottom: 1.25rem; /* Khoảng cách giữa các toast */
+    }
+
+/* Định nghĩa kiểu cho tiêu đề của toast */
+.toast-header {
+    display: flex; /* Sử dụng Flexbox để sắp xếp */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 1.25rem; /* Padding cho tiêu đề */
+    color: #697a8d; /* Màu chữ cho tiêu đề */
+    background-color: transparent; /* Nền trong suốt cho tiêu đề */
+    border-bottom: 0 solid transparent; /* Không có đường viền dưới */
+    border-top-left-radius: 0.5rem; /* Bo tròn góc trên bên trái */
+    border-top-right-radius: 0.5rem; /* Bo tròn góc trên bên phải */
+}
+
+    /* Định dạng nút đóng trong tiêu đề của toast */
+    .toast-header .btn-close {
+        margin-right: -0.625rem; /* Đẩy nút ra ngoài */
+        margin-left: 1.25rem; /* Tạo khoảng cách bên trái */
+    }
+
+/* Định nghĩa kiểu cho nội dung của toast */
+.toast-body {
+    padding: 1.25rem; /* Padding cho nội dung */
+    word-wrap: break-word; /* Ngắt từ nếu cần thiết */
+}
+
+/* Định nghĩa kiểu cho các toast với màu nền thứ cấp */
+.bg-secondary.toast, .bg-secondary.bs-toast {
+    color: #fff; /* Màu chữ trắng */
+    background-color: rgba(133, 146, 163, 0.85) !important; /* Màu nền */
+    box-shadow: 0 0.25rem 1rem rgba(133, 146, 163, 0.4); /* Đổ bóng cho toast */
+}
+
+    /* Định dạng tiêu đề cho toast với màu nền thứ cấp */
+    .bg-secondary.toast .toast-header, .bg-secondary.bs-toast .toast-header {
+        color: #fff; /* Màu chữ trắng cho tiêu đề */
+    }
+
+        /* Định dạng nút đóng trong tiêu đề toast với màu nền thứ cấp */
+        .bg-secondary.toast .toast-header .btn-close, .bg-secondary.bs-toast .toast-header .btn-close {
+            background-color: #8592a3 !important; /* Màu nền cho nút đóng */
+            background-image: url("data:image/svg+xml,%3Csvg ..."); /* Hình ảnh SVG cho nút đóng */
+            box-shadow: 0 0.1875rem 0.375rem 0 rgba(133, 146, 163, 0.4) !important; /* Đổ bóng cho nút đóng */
+        }
+
+/* Định nghĩa kiểu cho các toast với màu nền thành công */
+.bg-success.toast, .bg-success.bs-toast {
+    color: #fff; /* Màu chữ trắng */
+    background-color: rgba(113, 221, 55, 0.85) !important; /* Màu nền */
+    box-shadow: 0 0.25rem 1rem rgba(113, 221, 55, 0.4); /* Đổ bóng cho toast */
+}
+
+/* Các định nghĩa tương tự cho các lớp màu khác (info, warning, danger, light, dark, gray) */
+.bg-info.toast, .bg-info.bs-toast {
+    color: #fff; /* Màu chữ trắng */
+    background-color: rgba(3, 195, 236, 0.85) !important; /* Màu nền */
+    box-shadow: 0 0.25rem 1rem rgba(3, 195, 236, 0.4); /* Đổ bóng cho toast */
+}
+
+    /* Tiêu đề cho toast với màu nền info */
+    .bg-info.toast .toast-header, .bg-info.bs-toast .toast-header {
+        color: #fff; /* Màu chữ trắng cho tiêu đề */
+    }
+
+        /* Nút đóng trong tiêu đề toast với màu nền info */
+        .bg-info.toast .toast-header .btn-close, .bg-info.bs-toast .toast-header .btn-close {
+            background-color: #03c3ec !important; /* Màu nền cho nút đóng */
+            background-image: url("data:image/svg+xml,%3Csvg ..."); /* Hình ảnh SVG cho nút đóng */
+            box-shadow: 0 0.1875rem 0.375rem 0 rgba(3, 195, 236, 0.4) !important; /* Đổ bóng cho nút đóng */
+        }
+
+/* Tương tự với màu nền warning, danger, light, dark, gray... */
