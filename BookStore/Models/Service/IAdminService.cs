@@ -1,8 +1,10 @@
-﻿namespace BookStore.Models.Service
+﻿using BookStore.Models.Model;
+
+namespace BookStore.Models.Service
 {
     public interface IAdminService
     {
-        /*Task<DashboardModel> GetDashboardOverview(int? viewType);
-        object UploadImage(UploadModel upload);*/
+        /*Task<DashboardModel> GetDashboardOverview(int? viewType);*/
+        object UploadImage(UploadModel upload);
     }
 }

@@ -17,19 +17,20 @@ using Microsoft.Extensions.Configuration;
 
 namespace BookStore.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : Controller //Lớp quản lý tài khoản ứng dụng 
     {
-        private readonly IMapper _mapper;
-        private readonly IAuthService _authService;
-        private readonly IBaseService<User> _userService;
-        private readonly IBaseService<Cart> _cartService;
-        private readonly IConfiguration _configuration;
-        private readonly IUserConfig _userConfig;
+        // Các trường (fields) lưu trữ các đối tượng dịch vụ được đưa vào qua Dependency Injection
+        private readonly IMapper _mapper; // Dịch vụ AutoMapper dùng để chuyển đổi dữ liệu giữa các mô hình (models)
+        private readonly IAuthService _authService; // Dịch vụ xác thực (Authentication) để quản lý đăng nhập và phân quyền
+        private readonly IBaseService<User> _userService; //quản lý người dùng (User)
+        private readonly IBaseService<Cart> _cartService; //quản lý giỏ hàng (Cart)
+        private readonly IConfiguration _configuration; // Truy cập các cài đặt cấu hình từ appsettings.json
+        private readonly IUserConfig _userConfig; // Quản lý các cấu hình cụ thể của người dùng
         /* public IActionResult Index()
          {
              return View();
          }*/
-        public AccountController(
+        public AccountController( //thêm dịch vụ
             IMapper mapper,
             IAuthService authService,
             IBaseService<User> userService,
@@ -38,7 +39,7 @@ namespace BookStore.Controllers
             IUserConfig userConfig)
 
         {
-            _mapper = mapper;
+            _mapper = mapper; //gán dịch vụ
             _authService = authService;
             _userService = userService;
             _cartService = cartService;

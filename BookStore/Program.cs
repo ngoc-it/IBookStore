@@ -42,6 +42,8 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserConfig, UserConfig>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 // Xây dựng ứng dụng
 var app = builder.Build();
