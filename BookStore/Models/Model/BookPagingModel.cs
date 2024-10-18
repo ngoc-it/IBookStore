@@ -5,7 +5,7 @@ namespace BookStore.Models.Model
     public class BookPagingModel
     {
         public string? Keyword { get; set; }
-        public int? CategoryCode { get; set; }
+        public int? CategoryId { get; set; }
         public PagingModel<Book> Paging { get; set; } //phân trang sách
     }
 }

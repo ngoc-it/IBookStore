@@ -10396,7 +10396,7 @@ a.text-dark:hover, a.text-dark:focus {
 #logoImg {
     height: 82px;
     width: 120px;
-    background-image: url(../img/logo-img.jpeg);
+    background-image: url(../img/logo-img.jpg);
     background-size: cover;
 }
 

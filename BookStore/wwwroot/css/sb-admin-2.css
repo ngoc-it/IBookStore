@@ -11724,7 +11724,7 @@ a:focus {
 }
 
 .bg-logo-image {
-    background: url('../img/logo-img.jpeg');
+    background: url('../img/logo-img.jpg');
     background-position: center;
     background-size: cover;
     width: 250px;
@@ -11732,13 +11732,13 @@ a:focus {
 }
 
 .bg-login-image {
-    background: url('../img/image-login.jpg');
+    background: url('../img/image-login.png');
     background-position: center;
     background-size: cover;
 }
 
 .bg-register-image {
-    background: url('../img/image-register.jpg');
+    background: url('../img/image-register.png');
     background-position: center;
     background-size: cover;
 }

@@ -13,7 +13,7 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\BookStore-master.zip" />
     <_ContentIncludedByDefault Remove="wwwroot\css\sb-admin-2.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\img\logo-img.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\img\image-login.png" />
   </ItemGroup>
 
   <ItemGroup>

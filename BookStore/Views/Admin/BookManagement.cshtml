@@ -16,7 +16,7 @@
 
 <div class="book-management d-flex justify-content-between align-items-center pb-3">
     <div class="d-flex">
-        @using (@Html.BeginForm("BookManagement", "Admin", new { keyword = Model.Keyword, categoryId = Model.CategoryCode }, FormMethod.Get, false, new { @class = "ctn-search d-flex" }))
+        @using (@Html.BeginForm("BookManagement", "Admin", new { keyword = Model.Keyword, categoryId = Model.CategoryId }, FormMethod.Get, false, new { @class = "ctn-search d-flex" }))
         {
             <div class="navbar-nav navbar-nav-custom align-items-center navbar-detached px-2">
                 <div class="nav-item d-flex align-items-center">
@@ -96,7 +96,7 @@
     <div class="d-flex justify-content-between align-items-center px-3 py-2 border-top">
         <h6 class="m-0">Tổng số: <strong>@Model.Paging.TotalRecord</strong> bản ghi</h6>
         <nav aria-label="Page navigation">
-            @Html.PagedListPager((IPagedList)Model.Paging.DataPaging, page => Url.Action("bookmanagement", "admin", new { pageIndex = page, keyword = Model.Keyword, categoryId = Model.CategoryCode }), new PagedListRenderOptions
+            @Html.PagedListPager((IPagedList)Model.Paging.DataPaging, page => Url.Action("bookmanagement", "admin", new { pageIndex = page, keyword = Model.Keyword, categoryId = Model.CategoryId }), new PagedListRenderOptions
        {
            LiElementClasses = new string[] { "page-item" },
            PageClasses = new string[] { "page-link" },

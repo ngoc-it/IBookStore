@@ -63,7 +63,7 @@ namespace BookStore.Controllers
             _mapper = mapper;
         }
 
-        /*public IActionResult Index()
+       /* public IActionResult Index()
         {
             return View();
         }*/
@@ -111,14 +111,29 @@ namespace BookStore.Controllers
         }
 
         //Get: /Admin/ExistCategoryCode
-        [HttpGet]
-        public async Task<JsonResult> ExistCategoryCode(string code, int? id)
+        /*[HttpGet]
+        public async Task<JsonResult> ExistCategoryCode(int code, int? id)
         {
-            var exist = await _categoryService.Exist(x => x.CategoryId.Trim().ToLower().Equals(code.Trim().ToLower())
-                                                            && (id != null && id != 0 ? x.Id != id : x.Id > 0));
+            *//*var exist = await _categoryService.Exist(x => x.CategoryId.Trim().ToLower().Equals(code.Trim().ToLower())
+                                                            && (id != null && id != 0 ? x.Id != id : x.Id > 0));*//*
+            var exist = await _categoryService.Exist(x => x.CategoryId == code // Sửa lại so sánh kiểu số nguyên
+                                                && (id != null && id != 0 ? x.Id != id : x.Id > 0));
 
             return Json(exist);
         }
+        */
+        [HttpGet]
+        public async Task<JsonResult> ExistCategoryCode(int code, int? id)
+        {
+            /*var exist = await _categoryService.Exist(x => x.CategoryId == code &&
+                                                         (id != null && id != 0 ? x.Id != id : true));
+            return Json(exist);*/
+            /*var exist = await _categoryService.Exist(x => x.CategoryId == code && (id == null || x.Id != id));*/
+            var exist = await _categoryService.Exist(x => x.CategoryCode == code // Sửa lại so sánh kiểu số nguyên
+                                                && (id != null && id != 0 ? x.Id != id : x.Id > 0));
+            return Json(exist);
+        }
+
 
         //Post: /Admin/InsertCategory
         [HttpPost]
@@ -135,24 +150,16 @@ namespace BookStore.Controllers
                 TempData["ToastType"] = Constants.Success;
                 return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
             }
-            /*TempData["ToastMessage"] = "Có lỗi xảy ra trong quá trình xử lý.";
+            TempData["ToastMessage"] = "Có lỗi xảy ra trong quá trình xử lý.";
             TempData["ToastType"] = Constants.Error;
-            return Json(new { redirectToUrl = redirectUrl, status = Constants.Error });*/
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                // Ghi lại lỗi hoặc hiển thị trong log
-                TempData["ToastMessage"] = string.Join(", ", errors);
-                TempData["ToastType"] = Constants.Error;
-                
-            }
-
             return Json(new { redirectToUrl = redirectUrl, status = Constants.Error });
+
         }
 
 
-        //Put: /Admin/UpdateCategory
-        [HttpPut]
+
+    //Put: /Admin/UpdateCategory
+    [HttpPut]
         [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> UpdateCategory([FromBody] Category model)
         {
@@ -211,7 +218,7 @@ namespace BookStore.Controllers
 
             var result = new BookPagingModel()
             {
-                CategoryCode = categoryId,
+                CategoryId = categoryId,
                 Keyword = keyword,
                 Paging = new PagingModel<Book>()
             };
@@ -296,11 +303,13 @@ namespace BookStore.Controllers
                     ModelState.AddModelError("PriceDiscount", "Giá khuyến mại phải nhỏ hơn giá bán");
                     isValid = false;
                 }
+                var bookExist = await _bookService.Exist(x => x.BookId == model.BookId && model.Id != x.Id);
 
-                var bookExist = await _bookService.Exist(x => x.BookId.ToLower().Trim().Equals(model.BookId.ToLower().Trim()) && model.Id != x.Id);
+                /* var bookExist = await _bookService.Exist(x => x.BookId.ToLower().Trim().Equals(model.BookId.ToLower().Trim()) && model.Id != x.Id);*/
+
                 if (bookExist)
                 {
-                    ModelState.AddModelError("BookCode", "Mã sách đã tồn tại");
+                    ModelState.AddModelError("BookId", "Mã sách đã tồn tại");
                     isValid = false;
                 }
 

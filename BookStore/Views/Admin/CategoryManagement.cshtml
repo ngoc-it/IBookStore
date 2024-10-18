@@ -39,7 +39,7 @@
                         @foreach (var item in Model.DataPaging)
                         {
                             <tr>
-                                <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@item.CategoryId</strong></td>
+                                <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>@item.CategoryCode</strong></td>
                                 <td>@item.CategoryName</td>
                                 <td>@item.TotalBook</td>
                                 <td><span class="badge @(item.IsActive ? "bg-label-success" : "bg-label-danger") me-1">@(item.IsActive ? "Đang hoạt động" : "Không hoạt động")</span></td>
@@ -232,12 +232,19 @@
                 let prop = $(el).attr('name');
 
                 if ($(el).attr('type') == 'checkbox') {
-                    entity[prop] = $(el).is(":checked");
-                }
-                else {
-                    entity[prop] = $(el).val();
+                    entity[prop] = $(el).is(":checked"); // Lưu giá trị checkbox
+                } else {
+                    entity[prop] = $(el).val(); // Lưu giá trị input
                 }
             });
+
+            // Kiểm tra lại nếu entity không có CategoryId, bạn có thể thêm kiểm tra như sau:
+            if (!entity.CategoryId) {
+                entity.CategoryId = 0; // Hoặc gán giá trị hợp lý khác nếu cần
+            }
+
+           
+
 
 
             $.ajax({
@@ -280,23 +287,26 @@
         }
 
         function clearValueInput() {
-            entity = {};
-            $('.modal [name]').each(function (i, el) {
-                let prop = $(el).attr('name');
+    entity = {}; // Khởi tạo lại đối tượng entity
 
-                if ($(el).attr('type') == 'checkbox') {
-                    $(el).prop('checked', true);
-                }
-                else {
-                    $(el).val('');
-                }
-            });
-            $('.modal .field-validation-valid').each(function (i, el) {
-                $(el).text('');
-            });
+    $('.modal [name]').each(function (i, el) {
+        let prop = $(el).attr('name');
 
-            $('.modal #modalLabel').text(editMode == "Edit" ? 'Sửa danh mục' : 'Thêm danh mục');
+        if ($(el).attr('type') == 'checkbox') {
+            $(el).prop('checked', true); // Checkbox được chọn mặc định
+        } else {
+            $(el).val(''); // Xóa sạch giá trị các trường input
         }
+    });
+
+    // Xóa bỏ các thông báo lỗi hiện tại nếu có
+    $('.modal .field-validation-valid').each(function (i, el) {
+        $(el).text('');
+    });
+
+    $('.modal #modalLabel').text(editMode === "Edit" ? 'Sửa danh mục' : 'Thêm danh mục');
+}
+
 
         function showErrorToast(msg) {
             $('.toast-placement').removeClass('bg-success').addClass('bg-danger');
