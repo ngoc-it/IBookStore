@@ -24,12 +24,11 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="~/assets/fonts/boxicons.css" />
+    <link rel="stylesheet" href="~/assets/vendor/fonts/boxicons.css" />
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="~/css/style.css" rel="stylesheet">
     <link href="~/css/toast.css" rel="stylesheet" />
-
     @if (IsSectionDefined("css"))
     {
         @RenderSection("css", required: false)
@@ -39,7 +38,7 @@
     <header>
         <!-- Topbar Start -->
         <div class="container-fluid">
-            <div class="row align-items-center py-2 px-xl-5">
+            <div class="row align-items-center py-2 px-xl-5" style=" background-color: #ead9d1;">
                 <div class="col-lg-3 d-none d-flex">
                     <a href="/home" class="text-decoration-none justify-content-center">
                         <div id="logoImg"></div>
@@ -161,36 +160,10 @@
         </div>
     </div>
 
-    <footer>
-        <!-- Footer Start -->
-        <div class="container-fluid bg-secondary text-dark mt-5">
-            <h5 class="pt-5 px-xl-5">Cửa hàng sách Book Store</h5>
-            <div class="row px-xl-5 align-items-center">
-                <div class="col-lg-3 col-md-12 pr-3 pr-xl-5">
-                    <a class="text-decoration-none m-4">
-                        <div id="logoImg"></div>
-                    </a>
-                </div>
-                <div class="col-lg-9 col-md-12">
-                    <h5>Thông tin liên hệ</h5>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>ngoc@gmail.com</p>
-                        </div>
-                        <div class="col-md-4">
-                            <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Việt Nam</p>
-                        </div>
-                        <div class="col-md-4">
-                            <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>0987 654 321</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
+    
         <!-- Footer End -->
         <!-- Back to Top -->
-        <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+       
 
         <div class="bs-toast toast toast-placement @(ViewBag.ToastType?.ToString() == Constants.Success ? "bg-success" : "bg-danger") top-0 end-0 mr-3 mt-3"
              role="alert"
@@ -206,7 +179,7 @@
                 @ViewBag.ToastMessage
             </div>
         </div>
-    </footer>
+    
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>

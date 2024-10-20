@@ -395,7 +395,7 @@ h3, .h3 {
 @media (max-width: 1200px) {
     h3, .h3 {
         font-size: calc(1.3rem + 0.6vw);
-    }
+    }J
 }
 
 h4, .h4 {
@@ -728,8 +728,8 @@ pre {
 }
 
 .col-6 {
-    flex: 0 0 50%;
-    max-width: 50%;
+    flex: 0 0 30%;
+    max-width: 30%;
 }
 
 .col-7 {
@@ -1344,7 +1344,7 @@ pre {
     }
 
     .col-lg-3 {
-        flex: 0 0 25%;
+        flex: 0 0 50%;
         max-width: 25%;
     }
 
@@ -1359,8 +1359,8 @@ pre {
     }
 
     .col-lg-6 {
-        flex: 0 0 50%;
-        max-width: 50%;
+        flex: 0 0 30%;
+        max-width: 30%;
     }
 
     .col-lg-7 {
@@ -6354,7 +6354,7 @@ button.bg-primary:focus {
 }
 /*màu footer*/
 .bg-secondary {
-    background-color: #f2aaa2 !important;
+    background-color: #ead9d1 !important;
 }
 
 a.bg-secondary:hover, a.bg-secondary:focus,
@@ -10394,8 +10394,8 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 #logoImg {
-    height: 82px;
-    width: 120px;
+    height: 80px;
+    width: 200px;
     background-image: url(../img/logo-img.jpg);
     background-size: cover;
 }

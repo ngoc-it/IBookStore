@@ -105,21 +105,21 @@
                 </div>
             </div>
 
-            @* <div class="mb-3">
+            <div class="mb-3">
                 <label class="form-label" for="basic-default-message">Thông tin mô tả</label>
 
                 @Html.TextAreaFor(model => model.Description, new { @id = "FullDescription", @class = "form-control" })
-                <script src="@Url.Content("~/js/ckeditor/ckeditor.js")"></script>
+                
+            @*     <script src="@Url.Content("~/js/ckeditor/ckeditor.js")"></script>
                 <script>
                     CKEDITOR.replace("FullDescription");
                     CKEDITOR.disableAutoInline = true;
-                </script>
+                </script> *@
             </div>
- *@
+
             
 
-            <div id="ctnBookImageInfo" class="row">
-            </div>
+            
 
             <div class="d-flex justify-content-between align-items-center">
                 <div class="form-check form-switch">
@@ -205,35 +205,7 @@
             }
         }
 
-        function bindingImageInfo() {
-            $('#ctnBookImageInfo').empty();
-
-            if (bookInfoImg.length > 0) {
-                bookInfoImg.forEach(function (item) {
-                    $("#ctnBookImageInfo").append(`<div class="col-xl-6 col-md-12 border-end">
-                                                        <div class="mb-3 d-flex justify-content-between align-items-center">
-                                                            <div class="d-flex align-items-center">
-                                                                <img src="/uploads/${item}" class="img-book-td border mx-1">
-                                                                <p class="m-0 ms-2">${item}</p>
-                                                            </div>
-                                                            <a class="h-100 w-px-30 delete-img" imgname="${item}" title="Xóa"><i class="bx bx-trash me-1"></i></a>
-                                                        </div>
-                                                    </div>`
-                    );
-                });
-
-                $('#ctnBookImageInfo').delegate('a.delete-img', 'click', function (event) {
-                    event.stopPropagation();
-                    event.stopImmediatePropagation();
-
-                    let imgName = $(event.target).parent().attr('imgname');
-                    deleteBookImg(imgName);
-                });
-            }
-
-            $('input#InfoImage').val(bookInfoImg.join(';'));
-        }
-
+        
         function deleteBookImg(img) {
             const index = bookInfoImg.indexOf(img);
             if (index > -1) {

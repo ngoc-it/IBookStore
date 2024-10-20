@@ -63,10 +63,7 @@ namespace BookStore.Controllers
             _mapper = mapper;
         }
 
-       /* public IActionResult Index()
-        {
-            return View();
-        }*/
+        #region DANHMUC
         //GET: /Admin/CategoryManagement
         [HttpGet]
         [Authorize(Roles = Role.Admin)]
@@ -95,7 +92,8 @@ namespace BookStore.Controllers
             var pagingResult = new PagingModel<CategoryModel>()
             {
                 TotalRecord = categories.Count(),
-                DataPaging = categories.OrderByDescending(x => x.UpdatedDate).ToPagedList(pageIndex ?? 1, 10),
+               /* DataPaging = categories.OrderByDescending(x => x.CategoryCode).ToPagedList(pageIndex ?? 1, 10),*/
+                DataPaging = categories.OrderBy(x => x.CategoryCode).ToPagedList(pageIndex ?? 1, 10),
             };
 
             return View(pagingResult);
@@ -199,8 +197,8 @@ namespace BookStore.Controllers
             TempData["ToastType"] = Constants.Error;
             return Json(new { redirectToUrl = redirectUrl, status = Constants.Error });
         }
-
-        #region Book Management
+        #endregion
+        #region SACH
         //GET: /Admin/BookManagement
         [HttpGet]
         [Authorize(Roles = Role.Admin)]
@@ -375,7 +373,11 @@ namespace BookStore.Controllers
             }
         }
         #endregion
+        #region QUANLYNGUOIDUNG
 
+        #endregion
+        #region VOUCHER
+        #endregion
 
 
 

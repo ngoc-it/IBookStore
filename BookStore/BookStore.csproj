@@ -13,6 +13,7 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\BookStore-master.zip" />
     <_ContentIncludedByDefault Remove="wwwroot\css\sb-admin-2.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\Home\index.css" />
     <_ContentIncludedByDefault Remove="wwwroot\img\image-login.png" />
   </ItemGroup>
 
@@ -35,10 +36,6 @@
     <PackageReference Include="System.Drawing.Common" Version="8.0.8" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="10.2.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Home\" />
   </ItemGroup>
 
 </Project>

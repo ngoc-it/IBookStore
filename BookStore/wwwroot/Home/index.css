@@ -1,0 +1,495 @@
+/* Thiết lập các giá trị mặc định cho tất cả các phần tử */
+* {
+    margin: 0; /* Đặt margin về 0 */
+    padding: 0; /* Đặt padding về 0 */
+    box-sizing: border-box; /* Sử dụng box-sizing là border-box để tính toán kích thước của phần tử bao gồm cả padding và border */
+    font-family: Arial, Helvetica, sans-serif; /* Sử dụng font chữ mặc định là Arial, nếu không có sẽ sử dụng Helvetica, sau đó là các font sans-serif khác */
+
+}
+header{
+    background-color: #fe0000;
+    align-items: center;
+}
+/* Loại bỏ gạch chân dưới cho tất cả các liên kết */
+a {
+    text-decoration: none; /* Loại bỏ gạch chân dưới */
+}
+
+nav {
+    background-color: #E6BAA3; /* Đặt màu nền là #E4DEBE */
+}
+
+/* Loại bỏ dấu gạch đầu dòng cho danh sách */
+ul {
+    list-style: none; /* Loại bỏ dấu gạch đầu dòng */
+}
+
+/* Thiết lập lưới cho cấu trúc grid container */
+.grid-container {
+    max-width: 1200px; /* Đặt chiều rộng tối đa là 1200px */
+    margin: auto; /* Căn giữa grid container */
+    display: grid; /* Sử dụng grid layout */
+    grid-template-columns: 1fr auto; /* Thiết lập cột đầu tiên chiếm phần còn lại của không gian và cột thứ hai chiếm không gian cần thiết */
+    align-items: center; /* Căn phần tử trong grid container vào giữa theo chiều dọc */
+    gap: 10px; /* Đặt khoảng cách giữa các phần tử trong lưới là 10px */
+}
+
+/* Thiết lập phần tử ul bên trong thanh điều hướng */
+nav ul {
+    display: flex; /* Sử dụng flexbox để căn chỉnh các phần tử con */
+    justify-content: space-between; /* Phân bố các phần tử con một cách đều nhau */
+    align-items: center; /* Căn các phần tử con vào giữa theo chiều dọc */
+}
+
+nav ul .ch img {
+    width: 25px; /* Đặt chiều rộng của ảnh */
+    height: auto; /* Giữ tỷ lệ khung hình */
+    margin-right: 5px; /* Điều chỉnh khoảng cách giữa ảnh và chữ */
+    vertical-align: middle; 
+}
+nav ul .clc img {
+    width: 30px; /* Đặt chiều rộng của ảnh */
+    height: auto; /* Giữ tỷ lệ khung hình */
+    margin-right: 5px; /* Điều chỉnh khoảng cách giữa ảnh và chữ */
+    vertical-align: middle; 
+}
+nav ul .fs img {
+    width: 30px; /* Đặt chiều rộng của ảnh */
+    height: auto; /* Giữ tỷ lệ khung hình */
+    margin-right: 5px; /* Điều chỉnh khoảng cách giữa ảnh và chữ */
+    vertical-align: middle; 
+}
+nav ul .lh img {
+    width: 30px; /* Đặt chiều rộng của ảnh */
+    height: auto; /* Giữ tỷ lệ khung hình */
+    margin-right: 5px; /* Điều chỉnh khoảng cách giữa ảnh và chữ */
+    vertical-align: middle; /* Căn phần tử nằm ở giữa theo chiều dọc */
+}
+/* Đặt vị trí tương đối cho phần tử li thứ hai trong danh sách ul */
+nav ul li:nth-child(2) {
+    position: relative; /* Đặt vị trí của phần tử li là tương đối */
+}
+
+/* Định dạng input bên trong phần tử li thứ hai */
+nav ul li:nth-child(2) input {
+    height: 30px; /* Đặt chiều cao của input là 30px */
+    width: 100%; /* Đặt chiều rộng của input là 100% */
+    border-radius: 7px; /* Đặt góc bo tròn cho input là 7px */
+    border: 2px solid black; /* Đặt viền đen có độ rộng là 2px cho input */
+    padding-left: 6px; /* Thêm padding bên trái cho input là 6px */
+}
+
+/* Đặt vị trí tuyệt đối cho biểu tượng (i) bên trong phần tử li thứ hai */
+nav ul li:nth-child(2) i {
+    position: absolute; /* Đặt vị trí của biểu tượng là tuyệt đối */
+    font-size: 15px; /* Đặt kích thước chữ của biểu tượng là 15px */
+    right: 12px; /* Đặt vị trí từ phía bên phải của phần tử cha là 12px */
+    color: #000; /* Đặt màu chữ của biểu tượng là đen */
+    line-height: 30px; /* Đặt chiều cao dòng của biểu tượng là 30px */
+    cursor: pointer; /* Đổi con trỏ chuột khi di chuột qua biểu tượng */
+}
+
+/*Menu bar*/
+/* Định nghĩa kiểu dáng cho thanh menu */
+.menu-bar{
+    background-color: #D24545;
+}
+
+/* Thiết lập hiển thị các mục trong danh sách không thứ tự theo kiểu flex và phân phối không gian giữa chúng */
+.menu-bar ul{
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+/* Định nghĩa kiểu dáng cho mỗi mục trong danh sách */
+.menu-bar ul li{
+    
+    padding:12px 6px; /* Thiết lập lề cho mỗi mục */
+    list-style: none; /* Loại bỏ các dấu chấm mặc định */
+    align-items: center; /* Căn chỉnh các mục đứng thẳng */
+}
+
+/* Định nghĩa kiểu dáng cho biểu tượng trong mỗi mục */
+.menu-bar ul li a i{
+    display: flex; /* Hiển thị biểu tượng dưới dạng container flex */
+    margin-right: 10px; /* Thêm lề phải cho biểu tượng */
+    font-size: 16px; /* Thiết lập kích thước font cho biểu tượng */
+    color:#000; /* Thiết lập màu cho biểu tượng */
+}
+
+/* Định nghĩa kiểu dáng cho văn bản trong mỗi mục */
+.menu-bar ul li a span{
+    color:#000; /* Thiết lập màu cho văn bản */
+    font-size: 16px; /* Thiết lập kích thước font cho văn bản */
+    text-decoration: none; /* Loại bỏ gạch chân */
+} 
+
+/* Định nghĩa kiểu dáng cho mỗi mục khi rê chuột qua */
+.menu-bar ul li:hover{
+    background-color: #D24545; /* Thiết lập màu nền cho mục khi rê chuột qua */
+}
+
+/* Submenu */
+/* CSS cho menu con */
+.menu-bar-content ul li {
+    position: relative; /* Thiết lập vị trí tương đối cho mỗi mục */
+}
+
+.submenu {
+    position: absolute; /* Thiết lập vị trí tuyệt đối cho menu con */
+    background-color: #E6BAA3; /* Thiết lập màu nền cho menu con */
+    width: 180px; /* Thiết lập chiều rộng */
+    height: auto; /* Thiết lập chiều cao tự động */
+    left: 0; /* Đặt vị trí bắt đầu từ bên trái */
+    top: 100%; /* Đặt vị trí bắt đầu từ dưới cùng của mục cha */
+    padding: 12px; /* Thiết lập lề cho menu con */
+    display: none; /* Ẩn menu con ban đầu */
+}
+
+.submenu ul {
+    display: flex; /* Hiển thị danh sách con theo kiểu flex */
+    flex-direction: column; /* Thiết lập hướng dọc cho danh sách con */
+}
+
+.submenu ul li {
+    padding: 6px 0; /* Thiết lập lề cho mỗi mục trong danh sách con */
+}
+
+.submenu ul li a {
+    color: #000; /* Thiết lập màu cho văn bản trong menu con */
+}
+
+.submenu ul li:hover a {
+    color: #f5f511; /* Thiết lập màu cho văn bản khi di chuột qua */
+}
+
+.submenu ul li:hover {
+    background: none; /* Loại bỏ nền khi di chuột qua mục trong menu con */
+}
+
+/* Hiển thị menu con khi di chuột qua mục cha */
+.menu-bar-content ul li:hover .submenu {
+    display: block;
+}
+
+/* CSS cho thanh sidebar */
+
+.sidebar {
+    padding: 10px 0 0 0; /* Lề cho thanh bên */
+    float: left; /* Đặt thanh bên ở phía trái */
+    width: 220px; /* Chiều rộng của thanh bên */
+}
+
+/* Tiêu đề của thanh bên */
+.sidebar .nav-title {
+    padding: 20px 20px; /* Lề cho tiêu đề */
+    font-size: 14px; /* Kích thước font cho tiêu đề */
+    font-weight: 200; /* Độ dày của font cho tiêu đề */
+    color: #090909; /* Màu chữ cho tiêu đề */
+    text-align: center; /* Căn giữa tiêu đề */
+    text-transform: uppercase; /* Chuyển đổi văn bản thành chữ in hoa */
+    background-color: #D24545; /* Màu nền cho tiêu đề */
+}
+
+/* Các mục trong thanh bên */
+.sidebar .nav-item {
+    position: relative; /* Vị trí tương đối cho mỗi mục */
+    margin: 0; /* Lề cho mỗi mục */
+    transition: background .3s ease-in-out; /* Hiệu ứng chuyển đổi màu nền */
+    font-size: 12px; /* Kích thước font cho mỗi mục */
+}
+
+/* Hình ảnh trong mỗi mục */
+.sidebar .nav-item img {
+    width: 30px; /* Chiều rộng của ảnh */
+    height: auto; /* Giữ tỷ lệ khung hình */
+    margin-right: 5px; /* Khoảng cách giữa ảnh và chữ */
+    vertical-align: middle; /* Căn giữa ảnh */
+}
+
+/* Liên kết trong mỗi mục */
+.sidebar .nav-link {
+    display: block; /* Hiển thị mỗi liên kết trên một dòng */
+    padding: 8px 8px; /* Lề cho liên kết */
+    color: #000; /* Màu chữ cho liên kết */
+    text-decoration: none; /* Loại bỏ gạch chân */
+    background-color: #E6BAA3; /* Màu nền cho liên kết */
+    cursor: pointer; /* Thay đổi con trỏ chuột */
+}
+
+/* Hiệu ứng khi di chuột qua liên kết */
+.sidebar .nav-link:hover,
+.sidebar .nav-link:hover img {
+    background-color: #E4DEBE; /* Màu nền khi di chuột qua */
+    color: #9A031E; /* Màu chữ khi di chuột qua */
+}
+
+/* slider */
+.slider {
+    padding:10px;
+    overflow: hidden; /* Đảm bảo không có dấu tràn */
+}
+
+.slider-content {
+    display: flex; /* Sử dụng flexbox để căn chỉnh ảnh */
+}
+
+.slider-content img {
+    max-width: calc(25% - 7px); /* Giới hạn kích thước tối đa của ảnh */
+    max-height: auto; /* Chiều cao tự động tính theo tỷ lệ khung hình */
+    margin-right: 10px; /* Khoảng cách giữa các ảnh */
+    object-fit: contain; /* Hiển thị toàn bộ ảnh mà không cắt bất kỳ phần nào */
+}
+
+/* CSS cho phần Sản phẩm hot */
+.sanpham {
+    padding: 20px 10px 10px 10px; /* Lề cho phần Sản phẩm hot */
+    overflow: hidden; /* Đảm bảo không có dấu tràn */
+}
+
+/* Danh sách sản phẩm hot */
+.sanpham-hot-product {
+    display: flex; /* Sử dụng flexbox */
+    justify-content: space-between; /* Căn các mục đều nhau */
+    flex-wrap: wrap; /* Cho phép các mục tràn qua hàng mới */
+    list-style-type: none; /* Loại bỏ dấu đầu dòng */
+}
+
+/* Mỗi mục sản phẩm hot */
+.sanpham-hot-product-item {
+    width: 14.285714286%; /* Chiều rộng của mỗi mục (1/6) */
+    padding: 30px 12px 12px; /* Lề cho mỗi mục */
+    border: 1px solid #ddd; /* Đường viền */
+    cursor: pointer; /* Thay đổi con trỏ chuột */
+}
+
+/* Hiệu ứng khi di chuột qua mục sản phẩm */
+.sanpham-hot-product-item:hover {
+    box-shadow: 3px 3px 3px #ddd; /* Hiển thị đổ bóng */
+}
+
+/* Hiệu ứng khi di chuột qua mục sản phẩm */
+.sanpham-hot-product-item:hover {
+    transform: translateY(-20px); /* Di chuyển lên trên */
+}
+
+
+/* Hình ảnh trong mỗi mục sản phẩm */
+.sanpham-hot-product-item > img {
+    width: 100%; /* Chiều rộng là 100% */
+    transition: all 0.5s ease; /* Hiệu ứng chuyển đổi */
+}
+
+/* Thêm khoảng cách trên mỗi mục */
+.sanpham-hot-product-item {
+    padding-top: 20px; /* Lề trên */
+}
+
+/* Thêm khoảng cách dưới mỗi mục */
+.sanpham-hot-product-item {
+    margin-bottom: 6px; /* Lề dưới */
+}
+
+/* Hiệu ứng khi di chuột qua từng mục */
+.sanpham-hot-product-item-text li:nth-child(1):hover {
+    color: #c25f14; /* Màu chữ khi di chuột qua */
+}
+
+/* Hiệu ứng khi di chuột qua từng mục */
+.sanpham-hot-product-item-text li:nth-child(3):hover {
+    /*text-decoration: line-through;*/ /* Gạch ngang chữ */
+    color: #141211; /* Màu chữ khi di chuột qua */
+}
+
+/* Hiệu chỉnh font-weight cho mục thứ 4 */
+.sanpham-hot-product-item-text li:nth-child(4) {
+    font-weight: bold; /* Đậm chữ */
+}
+
+/* Hiệu chỉnh màu cho mục thứ 6 */
+.sanpham-hot-product-item-text li:nth-child(6) {
+    color: #c25f14; /* Màu chữ */
+}
+/* Tiêu đề của Sản phẩm hot */
+.sanpham-hot-tieude {
+    display: flex; /* Sử dụng flexbox */
+    justify-content: space-between; /* Căn các mục đều nhau */
+    margin-bottom: 20px; /* Lề dưới */
+}
+
+/* Liên kết trong tiêu đề của Sản phẩm hot */
+.sanpham-hot-tieude ul li a {
+    color: #333; /* Màu chữ */
+    font-size: 12px; /* Kích thước font */
+    transition: all 0.3s; /* Hiệu ứng chuyển đổi */
+}
+
+/* Danh sách liên kết trong tiêu đề của Sản phẩm hot */
+.sanpham-hot-tieude ul {
+    display: flex; /* Sử dụng flexbox */
+}
+
+/* Mỗi mục trong danh sách liên kết của Sản phẩm hot */
+.sanpham-hot-tieude ul li {
+    padding: 6px 12px; /* Lề cho mỗi mục */
+    border: 1px solid #ddd; /* Đường viền */
+    margin-left: 12px; /* Lề bên trái */
+    border-radius: 40px; /* Bo tròn góc */
+}
+/* POSTER */
+li{
+    list-style: none;
+}
+.poster {
+    padding: 20px 10px 0 10px; /* Lề cho phần Poster */
+    height: 100%; /* Chiều cao */
+    right: 0px;
+}
+
+.poster-content {
+    display: flex; /* Sử dụng flexbox */
+    flex-direction: column; /* Sắp xếp theo chiều dọc */
+}
+
+.poster-content-anh {
+    width: 100%; /* Chiều rộng */
+    height: 300px; /* Chiều cao */
+    position: relative;
+}
+/* .poster-content-anh::hover i{
+    opacity: 1;
+} */
+.poster-content-anh img {
+    width: 100%; /* Chiều rộng */
+    height: 100%; /* Chiều cao */
+    object-fit: contain; /* Chỉnh ảnh để vừa với kích thước của phần tử */
+}
+
+.poster-content-tieude {
+    display: flex; /* Sử dụng flexbox */
+    justify-content: space-between; /* Căn các phần tử bên trong */
+    border: 2px solid #ddd; /* Đường viền */
+    border-top: none; /* Loại bỏ đường viền trên */
+    height: 50px; /* Chiều cao */
+    padding: 0 12px; /* Lề bên trong */
+}
+
+.poster-content-tieude li {
+    width: 20%; /* Chiều rộng */
+    text-align: center; /* Căn giữa */
+    cursor: pointer; /* Con trỏ chuột */
+    padding: 6px 0; /* Lề */
+    height: 100%; /* Chiều cao */
+    line-height: 30px; /* Chiều cao dòng */
+    position: relative; /* Vị trí tương đối */
+}
+
+.poster-content-anh li::before {
+    display: block; /* Hiển thị dạng block */
+    content: ""; /* Nội dung trống */
+    position: absolute; /* Vị trí tuyệt đối */
+    height: 70%; /* Chiều cao */
+    width: 1px; /* Chiều rộng */
+    background-color: #E4DEBE; /* Màu nền */
+    right: 0; /* Lề bên phải */
+}
+
+.poster-content-tieude li.td1 {
+    border-top: 0px solid #c9c7c7; /* Đường viền trên */
+}
+
+/* Định dạng nút điều hướng cho các hình ảnh */
+.poster-content-anh-btn {
+    position: absolute; /* Đặt vị trí của nút là tuyệt đối */
+    top: 50%; /* Đặt vị trí dọc của nút ở giữa theo chiều dọc của phần tử cha */
+    display: flex; /* Sử dụng flexbox để căn chỉnh các phần tử bên trong */
+    justify-content: space-between; /* Căn các nút điều hướng về hai bên cách đều nhau */
+    width: 100%; /* Chiều rộng của phần tử là 100% của phần tử cha */
+}
+
+/* Định dạng các biểu tượng trong nút điều hướng */
+.poster-content-anh-btn i {
+    color: #0f0e0e; /* Màu chữ của biểu tượng */
+    font-size: 32px; /* Kích thước chữ của biểu tượng */
+    height: 50px; /* Chiều cao của biểu tượng */
+    width: 25px; /* Chiều rộng của biểu tượng */
+    background-color: #E4DEBE; /* Màu nền của biểu tượng */
+    display: flex; /* Sử dụng flexbox để căn chỉnh các phần tử bên trong */
+    justify-content: center; /* Căn biểu tượng vào giữa theo chiều ngang */
+    align-items: center; /* Căn biểu tượng vào giữa theo chiều dọc */
+    transform: translateY(-50%); /* Dịch chuyển biểu tượng lên trên 50% để căn giữa theo chiều dọc */
+    border-radius: 5px; /* Độ cong của viền biểu tượng */
+    opacity: 0; /* Mặc định ẩn biểu tượng */
+    transition: all 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà khi thay đổi thuộc tính */
+    cursor: pointer; /* Con trỏ chuột sẽ thay đổi khi di chuột qua biểu tượng */
+}
+
+/* Phần JavaScript của poster */
+.poster-content-anh img {
+    position: absolute; /* Đặt vị trí của hình ảnh là tuyệt đối */
+}
+
+/* Dịch chuyển hình ảnh trong phần tử cha */
+.poster-content-anh a:nth-child(2) img {
+    transform: translateX(100%); /* Dịch chuyển hình ảnh thứ hai sang phải 100% chiều rộng của phần tử cha */
+}
+.poster-content-anh a:nth-child(3) img {
+    transform: translateX(200%); /* Dịch chuyển hình ảnh thứ ba sang phải 200% chiều rộng của phần tử cha */
+}
+.poster-content-anh a:nth-child(4) img {
+    transform: translateX(300%); /* Dịch chuyển hình ảnh thứ tư sang phải 300% chiều rộng của phần tử cha */
+}
+.poster-content-anh a:nth-child(5) img {
+    transform: translateX(400%); /* Dịch chuyển hình ảnh thứ năm sang phải 400% chiều rộng của phần tử cha */
+}
+
+/* Định dạng phần tử chứa các hình ảnh */
+.poster-content-anh-container {
+    position: relative; /* Đặt vị trí của phần tử là tương đối */
+    overflow: hidden; /* Ẩn phần dư thừa nếu nội dung vượt quá kích thước của phần tử cha */
+}
+
+/* Hiển thị biểu tượng khi di chuột qua phần tử cha */
+.poster-content-anh-container:hover i {
+    opacity: 1; /* Hiển thị biểu tượng */
+}
+
+/* Hiệu ứng chuyển đổi khi hover trên phần tử chứa hình ảnh */
+.poster-content-anh {
+    transition: 0.3s ease; /* Hiệu ứng chuyển đổi mượt mà trong 0.3s */
+}
+.vi-deo-au {
+    display: flex; /* Sắp xếp các phần tử con theo hàng ngang */
+    align-items: center; /* Căn các phần tử con vào giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa các phần tử con theo chiều ngang */
+    flex-wrap: wrap; /* Cho phép các phần tử con xuống dòng nếu không đủ chỗ */
+}
+.vi-deo-au video {
+    padding: 20px 10px 0 10px;
+    max-width: 100%; /* Đảm bảo video không vượt quá kích thước của phần tử cha */
+    height: 200px; /* Đảm bảo tỷ lệ khung hình được bảo toàn */
+    width: 70%; /* Đảm bảo video chiếm toàn bộ chiều rộng của phần tử cha */
+}
+
+
+.vi-deo-au audio {
+    max-width: 100%; /* Đảm bảo audio không vượt quá kích thước của phần tử cha */
+    height: 200px; /* Đảm bảo tỷ lệ khung hình được bảo toàn */
+    width: 30%; /* Độ rộng của audio chiếm 30% phần tử cha */
+    padding:10px;
+}
+footer{
+    display: flex;
+    align-items: center;
+
+    margin-top: 20px;
+    background-color: #000;
+    height: 50px;
+}
+footer p{
+    padding:10px 20px 10px 220px;
+    color:#ddd;
+    text-align: center;
+}
+
