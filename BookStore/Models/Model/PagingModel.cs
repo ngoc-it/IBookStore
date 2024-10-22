@@ -13,6 +13,9 @@ namespace BookStore.Models.Model
         public string? Keyword { get; set; }
         public PagingModel<News> Paging { get; set; }
     }
+
+
+
 }
 /*using directives: Chỉ định các không gian tên cần thiết cho mô hình này.
 PagingModel<T>: Là lớp tổng quát giúp quản lý dữ liệu phân trang cho bất kỳ loại đối tượng nào. Việc sử dụng <T> cho phép lớp này trở nên linh hoạt hơn.

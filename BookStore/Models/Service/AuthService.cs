@@ -16,19 +16,11 @@ namespace BookStore.Models.Service
         }
         public async Task InsertUser(RegisterModel model)
         {
-            /*var user = _mapper.Map<User>(model);
 
-            user.Password = await HashPassword(model.Password);
-            user.RoleType = Constant.RoleEnum.User;
-            user.IsDelete = false;
-            user.IsActive = true;
-
-            await _userService.Insert(user);*/
             var user = _mapper.Map<User>(model);
 
-            // Không băm mật khẩu nữa, lưu trực tiếp mật khẩu
             user.Password = model.Password;
-            user.RoleType = Constant.RoleEnum.User;
+            user.RoleType = Constant.RoleEnum.User; //gán cho người đăng kí là 0 tức người dùng
             user.IsDelete = false;
             user.IsActive = true;
 
