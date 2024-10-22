@@ -1,6 +1,7 @@
 ﻿using BookStore.Models.Code;
 using BookStore.Models.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Rotativa.AspNetCore;
@@ -14,6 +15,12 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
+});
+builder.Services.AddSession(cfg =>
+{           // Đăng ký dịch vụ Session
+    cfg.Cookie.Name = "bookStore";            // Đặt tên Session - tên này sử dụng ở Browser (Cookie)
+    cfg.IdleTimeout = new TimeSpan(30, 00, 00, 0);  // Thời gian tồn tại của Session
+    cfg.Cookie.IsEssential = true;
 });
 
 // Add services to the container
@@ -63,6 +70,7 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapDefaultControllerRoute();
 app.UseDeveloperExceptionPage();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

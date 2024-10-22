@@ -2013,7 +2013,7 @@ progress {
     .table > thead {
         vertical-align: bottom;
         border-bottom: 2px solid #090909;
-        background-color: #f3ebc7;
+        background-color: #ead9d1;
     }
 
     .table > :not(:first-child) {
@@ -10856,7 +10856,7 @@ button.list-group-item-gray {
 }
 
 .bg-secondary {
-    background-color: #f3ebc7 !important;
+    background-color: #ead9d1 !important;
 }
 
 a.bg-secondary:hover, a.bg-secondary:focus,

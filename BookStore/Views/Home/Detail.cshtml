@@ -146,28 +146,5 @@
 @section scripts {
     @* <script src="~/lib/owlcarousel/owl.carousel.min.js"></script> *@
     <script src="~/js/main.js"></script>
-         @*   // Product Quantity (Điều chỉnh số lượng sản phẩm)
-        $('.quantity button').on('click', function () {
-            var button = $(this);
-            let maxQuantity = parseInt(button.attr('max-quantity')); // Lấy số lượng tối đa từ thuộc tính
-            var oldValue = button.parent().parent().find('input').val();
-
-            // Tăng số lượng khi nút cộng được nhấn
-            if (button.hasClass('btn-plus')) {
-                var newVal = parseFloat(oldValue);
-
-                if (oldValue < maxQuantity) {
-                    newVal = parseFloat(oldValue) + 1;
-                }
-            }
-            // Giảm số lượng khi nút trừ được nhấn
-            else {
-                if (oldValue > 1) {
-                var newVal = parseFloat(oldValue) - 1;
-            } else {
-                newVal = 1;
-            }
-        }
-        button.parent().parent().find('input').val(newVal); // Cập nhật giá trị input
-    }); *@
+       
 }
