@@ -11,9 +11,9 @@
 
 @{
     ViewData["Title"] = "Quản lý người dùng";
-    ViewData["HeaderTitle"] = "Người dùng";
+    ViewData["HeaderTitle"] = "NGƯỜI DÙNG";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-    ViewBag.Menu = 6;
+    ViewBag.Menu = 5;
 }
 
 @section css {
@@ -32,9 +32,6 @@
             <input type="submit" class="btn btn-primary mx-2" value="Lọc" style="height: fit-content;" />
         }
     </div>
-@*     <button type="button" class="btn btn-primary" style="height: fit-content;" onclick="location.href='/admin/userdetail'">
-        Thêm mới
-    </button> *@
 </div>
 @{
     var userConfig = new User();
@@ -103,7 +100,7 @@
             </table>
         </div>
         <div class="d-flex justify-content-between align-items-center px-3 py-2 border-top">
-            <h6 class="m-0">Tổng số: <strong>@Model.Paging.TotalRecord</strong> bản ghi</h6>
+            <h6 class="m-0">Tổng số: <strong>@Model.Paging.TotalRecord</strong></h6>
             <nav aria-label="Page navigation">
                 @Html.PagedListPager((IPagedList)Model.Paging.DataPaging, page => Url.Action("usermanagement", "admin", new { pageIndex = page, keyword = Model.Keyword }), new PagedListRenderOptions
            {

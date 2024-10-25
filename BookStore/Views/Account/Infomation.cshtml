@@ -28,7 +28,8 @@
             <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
                 <div class="navbar-nav w-100 overflow-auto">
                     <a class="nav-item nav-link active">Thông tin tài khoản</a>
-                    <a href="/account/changepassword" class="nav-item nav-link">Đổi mật khẩu</a>
+                    @* <a href="/account/changepassword" class="nav-item nav-link">Đổi mật khẩu</a> *@
+                    <a asp-controller="Account" asp-action="ChangePassword" class="nav-item nav-link">Đổi mật khẩu</a>
                 </div>
             </nav>
         </div>
@@ -111,17 +112,7 @@
                                 @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                       @*  <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label text-align-end px-0">Địa chỉ</label>
-                            <div class="col-sm-10">
-                                <div class="input-group input-group-merge">
-                                    <span class="input-group-text">
-                                        <i class="bx bx-map"></i>
-                                    </span>
-                                    @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Địa chỉ", maxlength = "500" })
-                                </div>
-                            </div>
-                        </div> *@
+                       
                         <div class="row mb-3">
                             <label class="col-sm-2 form-label text-align-end px-0">Thông tin khác</label>
                             <div class="col-sm-10">
@@ -141,6 +132,7 @@
                     }
                 </div>
             </div>
+
         </div>
     </div>
 </div>

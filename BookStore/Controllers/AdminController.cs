@@ -19,10 +19,7 @@ namespace BookStore.Controllers
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IBaseService<Category> _categoryService;
-        private readonly IBaseService<Delivery> _deliveryService;
         private readonly IBaseService<Voucher> _voucherService;
-        private readonly IBaseService<Order> _orderService;
-        private readonly IBaseService<News> _newsService;
         private readonly IBookService _bookService;
         private readonly IBaseService<User> _userService;
         private readonly IConfiguration _configuration;
@@ -33,10 +30,7 @@ namespace BookStore.Controllers
         private readonly IMapper _mapper;
         public AdminController(IBaseService<Category> categoryService,
             IWebHostEnvironment environment,
-            IBaseService<Delivery> deliveryService,
             IBaseService<Voucher> voucherService,
-            IBaseService<Order> orderService,
-            IBaseService<News> newsService,
             IBookService bookService,
             IBaseService<User> userService,
             IConfiguration configuration,
@@ -47,13 +41,13 @@ namespace BookStore.Controllers
             IMapper mapper)
         {
             _hostingEnvironment = environment;
-            _deliveryService = deliveryService;
+
             _categoryService = categoryService;
             _voucherService = voucherService;
             _configuration = configuration;
             _adminService = adminService;
-            _orderService = orderService;
-            _newsService = newsService;
+
+
             _bookService = bookService;
             //_cartService = cartService;
             _userService = userService;
@@ -107,25 +101,10 @@ namespace BookStore.Controllers
             return Json(entity);
         }
 
-        //Get: /Admin/ExistCategoryCode
-        /*[HttpGet]
-        public async Task<JsonResult> ExistCategoryCode(int code, int? id)
-        {
-            *//*var exist = await _categoryService.Exist(x => x.CategoryId.Trim().ToLower().Equals(code.Trim().ToLower())
-                                                            && (id != null && id != 0 ? x.Id != id : x.Id > 0));*//*
-            var exist = await _categoryService.Exist(x => x.CategoryId == code // Sửa lại so sánh kiểu số nguyên
-                                                && (id != null && id != 0 ? x.Id != id : x.Id > 0));
-
-            return Json(exist);
-        }
-        */
         [HttpGet]
         public async Task<JsonResult> ExistCategoryCode(int code, int? id)
         {
-            /*var exist = await _categoryService.Exist(x => x.CategoryId == code &&
-                                                         (id != null && id != 0 ? x.Id != id : true));
-            return Json(exist);*/
-            /*var exist = await _categoryService.Exist(x => x.CategoryId == code && (id == null || x.Id != id));*/
+
             var exist = await _categoryService.Exist(x => x.CategoryCode == code // Sửa lại so sánh kiểu số nguyên
                                                 && (id != null && id != 0 ? x.Id != id : x.Id > 0));
             return Json(exist);
@@ -463,45 +442,7 @@ namespace BookStore.Controllers
             TempData["ToastType"] = Constants.Error;
             return Json(new { redirectToUrl = redirectUrl, status = Constants.Error });
         }
-        /*
-                [HttpGet]
-                public async Task<IActionResult> UserDetail(int? id)
-                {
-                    if (id != null)
-                    {
-                        ViewData["HeaderTitle"] = "Sửa thông tin tài khoản";
-                    }
-                    else
-                    {
-                        ViewData["HeaderTitle"] = "Thêm tài khoản";
-                    }
-
-                    // Set vào ViewBag cho danh sách giới tính và vai trò
-                    ViewBag.GenderList = new SelectList(new List<ItemDropdownModel>()
-            {
-                new ItemDropdownModel(){ Value = 0, Name = "Chọn giới tính" },
-                new ItemDropdownModel(){ Value = (int)GenderEnum.Male, Name = "Nam" },
-                new ItemDropdownModel(){ Value = (int)GenderEnum.Female, Name = "Nữ" },
-                new ItemDropdownModel(){ Value = (int)GenderEnum.Other, Name = "Khác" },
-            }, "Value", "Name");
-
-                    ViewBag.RoleList = new SelectList(new List<ItemDropdownModel>()
-            {
-                new ItemDropdownModel(){ Value = (int)RoleEnum.User, Name = "Người dùng" },
-            }, "Value", "Name");
-
-                    // Lấy thông tin người dùng nếu có ID
-                    var user = await _userService.GetEntityById(id ?? 0);
-
-                    // Nếu không có ID (tức là tạo mới), không cần mật khẩu mặc định
-                    if (user == null)
-                    {
-                        user = new User();
-                    }
-
-                    return View(user);
-                }
-        */
+        
         [HttpGet]
         public async Task<IActionResult> UserDetail(int? id)
         {

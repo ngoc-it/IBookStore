@@ -3,13 +3,116 @@
 @model Book
 
 @{
-    ViewData["Title"] = "Quản lý sách";
+    ViewData["Title"] = "QUẢN LÝ SÁCH";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     ViewBag.Menu = 3;
 }
 
 @section css {
+    <style>
+        /* Thiết lập cơ bản cho form quản lý sách */
+    .book-detail {
+        margin-top: 20px;
+    }
 
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Dành cho phần ảnh bìa sách */
+    .img-book-upload {
+        height: 300px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .img-book-upload img {
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .img-book-upload input[type="file"] {
+        display: none;
+    }
+
+    /* Điều chỉnh cho các label */
+    .form-label {
+        font-weight: bold;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    /* Điều chỉnh cho các input và textarea */
+    .form-control, .form-select {
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+        border-color: #80bdff;
+    }
+
+    /* Điều chỉnh cho các nút */
+    button.btn {
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    button.btn-outline-secondary {
+        background-color: #fff;
+        border-color: #6c757d;
+    }
+
+    button.btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    button.btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    button.btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    /* Căn chỉnh phần trạng thái */
+    .form-check-label {
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .form-check-input {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    /* Tối ưu cho phần thông tin mô tả */
+    textarea.form-control {
+        min-height: 150px;
+    }
+
+    /* Các thông báo lỗi */
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 5px;
+    }
+
+
+
+</style>
 }
 
 <div class="d-flex align-items-center">
@@ -110,11 +213,6 @@
 
                 @Html.TextAreaFor(model => model.Description, new { @id = "FullDescription", @class = "form-control" })
                 
-            @*     <script src="@Url.Content("~/js/ckeditor/ckeditor.js")"></script>
-                <script>
-                    CKEDITOR.replace("FullDescription");
-                    CKEDITOR.disableAutoInline = true;
-                </script> *@
             </div>
 
             

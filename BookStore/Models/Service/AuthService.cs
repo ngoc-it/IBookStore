@@ -28,21 +28,7 @@ namespace BookStore.Models.Service
         }
         public async Task<User> AuthenticationUser(UserModel model)
         {
-            //var user = await _userService.GetList(x => x.UserName.ToLower().Trim().Equals(model.UserName.ToLower().Trim()) || x.Email.ToLower().Trim().Equals(model.UserName.ToLower().Trim()));
-
-            //if (user != null && user.Any())
-            //{
-            //    for (var i = 0; i < user.Count; i++)
-            //    {
-            //        var thisUser = user.ElementAt(i);
-            //        if (await ValidateHashPassword(model.Password, thisUser.Password))
-            //        {
-            //            return thisUser;
-            //        }
-            //    }
-            //}
-
-            //return null;
+            
             var user = await _userService.GetList(x => x.UserName.ToLower().Trim().Equals(model.UserName.ToLower().Trim()) || x.Email.ToLower().Trim().Equals(model.UserName.ToLower().Trim()));
 
             if (user != null && user.Any())
@@ -50,7 +36,7 @@ namespace BookStore.Models.Service
                 for (var i = 0; i < user.Count; i++)
                 {
                     var thisUser = user.ElementAt(i);
-                    if (model.Password == thisUser.Password)  // Không kiểm tra băm nữa
+                    if (model.Password == thisUser.Password)  
                     {
                         return thisUser;
                     }
@@ -60,16 +46,6 @@ namespace BookStore.Models.Service
             return null;
         }
 
-/*        public Task<string> HashPassword(string value)
-        {
-            return Task.FromResult(BCrypt.Net.BCrypt.HashPassword(value, BCrypt.Net.BCrypt.GenerateSalt(12)));
-        }
-*/
-        
 
-       /* public Task<bool> ValidateHashPassword(string value, string hash)
-        {
-            return Task.FromResult(BCrypt.Net.BCrypt.Verify(value, hash));
-        }*/
     }
 }

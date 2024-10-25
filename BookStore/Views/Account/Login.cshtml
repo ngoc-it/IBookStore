@@ -19,7 +19,7 @@
     <title>Đăng nhập - Book Store</title>
     <link href="~/img/logo-img.jpeg" rel="icon">
     <!-- Custom fonts for this template-->
-    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="~/vendor/fontawesome/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
 
@@ -30,7 +30,8 @@
     <link href="~/css/toast.css" rel="stylesheet" />
 </head>
 
-<body class="bg-gradient-primary">
+<body class="bg-gradient-primary" 
+style="background-color: #fff;background-image: linear-gradient(180deg, #c1763a4a 10%, #3d5cb85e 100%);background-size: cover;">
     <div class="container">
         <!-- Outer Row -->
         <div class="row justify-content-center">
@@ -95,20 +96,16 @@
             </div>
         </div>
 
-        <div class="bs-toast toast toast-placement @(ViewBag.ToastType?.ToString() == Constants.Success ? "bg-success" : "bg-danger") top-0 end-0 mr-3 mt-3"
-             role="alert"
-             aria-live="assertive"
-             aria-atomic="true"
-             data-delay="3000">
+        <!-- Toast Message -->
+        <div id="toast-message" class="toast toast-placement @(TempData["ToastType"]?.ToString() == Constants.Success ? "bg-success" : "bg-danger") top-0 end-0 mr-3 mt-3" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" style="position: absolute; z-index: 9999;">
             <div class="toast-header">
                 <i class="bx bx-bell mr-2"></i>
-                <div class="me-auto fw-semibold">@(ViewBag.ToastType?.ToString() == Constants.Success ? "Thành công" : "Thất bại")</div>
+                <div class="me-auto fw-semibold">@((TempData["ToastType"]?.ToString() == Constants.Success ? "Thành công" : "Thất bại"))</div>
             </div>
             <div class="toast-body">
-                @ViewBag.ToastMessage
+                @TempData["ToastMessage"]
             </div>
         </div>
-    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="~/vendor/jquery/jquery.min.js"></script>
@@ -120,18 +117,20 @@
     <!-- Custom scripts for all pages-->
     <script src="~/js/sb-admin-2.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            // Kiểm tra nếu có toast message trong TempData
-            if ('@ViewBag.ToastType' && '@ViewBag.ToastType' != 'None') {
-                // Hiển thị toast message
-                $('.toast-placement').toast('show');
-            }
-        });
-    </script>
-    @{
-        ViewBag.ToastType = Constants.None;
-        ViewBag.ToastMessage = string.Empty;
-    }
+
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                // Kiểm tra nếu có thông báo từ TempData và hiển thị toast
+                var toastMessage = '@TempData["ToastMessage"]';
+                var toastType = '@TempData["ToastType"]';
+
+                if (toastMessage && toastType != 'None') {
+                    $('#toast-message').toast('show');
+                }
+            });
+        </script>
+
+
 </body>
 </html>

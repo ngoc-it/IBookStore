@@ -7,7 +7,6 @@ namespace BookStore.Models.Service
     {
         Task InsertUser(RegisterModel model);
         Task<User> AuthenticationUser(UserModel model);
-        //Task<string> HashPassword(string value);
-        //Task<bool> ValidateHashPassword(string value, string hash);
+
     }
 }

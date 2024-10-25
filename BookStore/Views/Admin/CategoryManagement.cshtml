@@ -6,12 +6,81 @@
 
 @{
     ViewData["Title"] = "Quản lý danh mục";
-    ViewData["HeaderTitle"] = "Danh mục sách";
+    ViewData["HeaderTitle"] = "DANH MỤC SÁCH";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-    ViewBag.Menu = 4;
+    ViewBag.Menu = 2;
 }
 
 @section css {
+   @* Modal *@
+   <style>
+        /* Tùy chỉnh modal */
+        .modal .modal-content {
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            background-color: #e86254;
+            color: white;
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+            .modal-header .btn-close {
+                color: white;
+                opacity: 1;
+            }
+
+        .modal-body {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+            .modal-body .form-label {
+                font-weight: 500;
+                color: #343a40;
+            }
+
+            .modal-body .form-control {
+                border-radius: 5px;
+                border: 1px solid #ced4da;
+            }
+
+        .modal-footer {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-top: 1px solid #dee2e6;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+            .modal-footer .btn-primary {
+                background-color: #e86254;
+                border-color: #e86254;
+                transition: background-color 0.3s ease-in-out;
+            }
+
+                .modal-footer .btn-primary:hover {
+                    background-color: #e86254;
+                    border-color: #e86254;
+                }
+
+            .modal-footer .btn-outline-secondary {
+                border-color: #6c757d;
+                color: #6c757d;
+                transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+            }
+
+                .modal-footer .btn-outline-secondary:hover {
+                    color: #343a40;
+                    border-color: #343a40;
+                }
+
+   </style>
+
 }
 
 <div class="d-flex justify-content-end align-items-center pb-3">

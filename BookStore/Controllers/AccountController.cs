@@ -103,7 +103,7 @@ namespace BookStore.Controllers
                     else if (!user.IsActive)
                     {
                         // Nếu tài khoản bị khóa, hiển thị thông báo lỗi và yêu cầu liên hệ quản trị viên
-                        ViewBag.ToastMessage = "Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.";
+                        ViewBag.ToastMessage = "Tài khoản đã bị khóa.";
                         ViewBag.ToastType = Constants.Error;
 
                         // Trả về trang đăng nhập với thông tin lỗi
@@ -145,8 +145,8 @@ namespace BookStore.Controllers
                 else
                 {
                     // Nếu tài khoản hoặc mật khẩu không chính xác, hiển thị thông báo lỗi
-                    ViewBag.ToastMessage = "Tài khoản hoặc mật khẩu không chính xác.";
-                    ViewBag.ToastType = Constants.Error;
+                    TempData["ToastMessage"] = "Tài khoản hoặc mật khẩu không chính xác.";
+                    TempData["ToastType"] = Constants.Error;
 
                     // Trả về trang đăng nhập với thông tin lỗi
                     return View(model);
@@ -168,36 +168,47 @@ namespace BookStore.Controllers
 
         // POST: /Account/Register
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken] //// Xác nhận mã chống giả mạo để bảo vệ khỏi các cuộc tấn công CSRF
         public async Task<ActionResult>Register(RegisterModel model)
         {
+            //kiểm tra tính hợp lệ của dữ liệu nhập vào form (Model)
             if (ModelState.IsValid)
             {
+                //kiểm tra sự tôn tại của tên đăng nhập trong cơ sở dữ liệu (bỏ qua khoảng trắng và ko phân biệt chữ hoa thường)
                 var userExist = await _userService.Exist(x => x.UserName.ToLower().Trim().Equals(model.UserName.ToLower().Trim()));
+                //kiểm tra emal trong csdl 
                 var emailExist = await _userService.Exist(x => x.Email.ToLower().Trim().Equals(model.Email.ToLower().Trim()));
-                if (userExist && emailExist)
+                if (userExist && emailExist) //nếu cả tên đăng nhập và email đã tồn tại 
                 {
+                    //thêm thông báo lỗi vào ModelState cho tên đăng nhập
                     ModelState.AddModelError("UserName", "Tên đăng nhập đã tồn tại");
+                    // Thêm thông báo lỗi cho email
                     ModelState.AddModelError("Email", "Email đã tồn tại");
-                    return View(model);
+                    return View(model); //trả vê view với thông báo lỗi email
                 }
+                // Nếu chỉ có tên đăng nhập tồn tại
                 else if (userExist)
-                {
+                {// Thêm thông báo lỗi vào ModelState cho tên đăng nhập
                     ModelState.AddModelError("UserName", "Tên đăng nhập đã tồn tại");
+                    // Trả về view với thông báo lỗi về tên đăng nhập
                     return View(model);
                 }
+                // Nếu chỉ có email tồn tại
                 else if (emailExist)
                 {
+                    // Thêm thông báo lỗi vào ModelState cho email
                     ModelState.AddModelError("Email", "Email đã tồn tại");
+                    // Trả về view với thông báo lỗi về email
                     return View(model);
                 }
                 else
-                {
+                {  // Nếu cả tên đăng nhập và email đều chưa tồn tại
                     await _authService.InsertUser(model);
-
+                    // Gọi hàm để chèn người dùng mới vào cơ sở dữ liệu thông qua _authService
+                    // Thiết lập thông báo thành công vào TempData để hiển thị ở trang kế tiếp
                     TempData["ToastMessage"] = "Đăng ký tài khoản thành công.";
                     TempData["ToastType"] = Constants.Success;
-
+                    // Chuyển hướng người dùng tới trang đăng nhập sau khi đăng ký thành công
                     return RedirectToAction("Login");
                 }
             }
@@ -209,24 +220,27 @@ namespace BookStore.Controllers
         [Authorize]
         public async Task<IActionResult> Infomation()
         {
+            // Thiết lập giá trị mặc định cho ToastMessage (thông báo) là không có
             ViewBag.ToastType = Constants.None;
+            // Kiểm tra nếu có thông báo Toast (từ TempData)
             if (TempData["ToastMessage"] != null && TempData["ToastType"] != null)
             {
+                // Gán thông báo và loại thông báo vào ViewBag để hiển thị trong view
                 ViewBag.ToastMessage = TempData["ToastMessage"];
                 ViewBag.ToastType = TempData["ToastType"];
-
+                // Xóa thông báo sau khi đã lấy ra
                 TempData.Remove("ToastMessage");
                 TempData.Remove("ToastType");
             }
-
+            // Lấy ID của người dùng hiện tại
             var userId = _userConfig.GetUserId();
             /*ViewBag.CartCount = await _cartService.Count(x => x.UserId == userId);*/
-
+            // Lấy thông tin người dùng từ cơ sở dữ liệu theo ID
             var user = await _userService.GetEntityById(userId);
-
+            // Ánh xạ dữ liệu người dùng từ entity User sang mô hình UserInfomationModel bằng AutoMapper
             var userModel = _mapper.Map<UserInfomationModel>(user);
+            // Thiết lập danh sách lựa chọn giới tính và lưu vào ViewBag để sử dụng trong view
 
-            // Set vào ViewBag
             ViewBag.GenderList = new SelectList(new List<ItemDropdownModel>()
             {
                 new ItemDropdownModel(){ Value = 0, Name = "Chọn giới tính" },
@@ -239,7 +253,7 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize] // Yêu cầu người dùng phải đăng nhập
         public async Task<IActionResult> Infomation(UserInfomationModel model)
         {
             // Set vào ViewBag
@@ -273,21 +287,68 @@ namespace BookStore.Controllers
                 }
                 else
                 {
+                    // Lấy thông tin người dùng hiện tại từ cơ sở dữ liệu
                     var user = await _userService.GetEntityById(model.Id);
 
                     var userModel = _mapper.Map(model, user);
-
+                    // Cập nhật thông tin người dùng trong cơ sở dữ liệu
                     await _userService.Update(userModel);
 
                     TempData["ToastMessage"] = "Cập nhật thông tin tài khoản thành công.";
                     TempData["ToastType"] = Constants.Success;
+                    // Chuyển hướng về trang "Infomation" sau khi cập nhật thành công
                     return RedirectToAction("Infomation");
                 }
             }
-
+            // Nếu dữ liệu không hợp lệ, trả về view với mô hình dữ liệu
             return View(model);
         }
 
+        public async Task<IActionResult> ChangePassword()
+        {
+            ViewBag.ToastType = Constants.None;
+            if (TempData["ToastMessage"] != null && TempData["ToastType"] != null)
+            {
+                ViewBag.ToastMessage = TempData["ToastMessage"];
+                ViewBag.ToastType = TempData["ToastType"];
+
+                TempData.Remove("ToastMessage");
+                TempData.Remove("ToastType");
+            }
+
+            var userId = _userConfig.GetUserId();
+            ViewBag.CartCount = await _cartService.Count(x => x.UserId == userId);
+
+            return View();
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> ChangePassword(PasswordModel model)
+        {
+            var userId = _userConfig.GetUserId();
+            // Lấy thông tin người dùng theo ID
+            var user = await _userService.GetEntityById(userId);
+            // Kiểm tra mật khẩu cũ
+            var validPass = model.OldPassword == user.Password; // Kiểm tra mật khẩu không băm
+
+            if (!validPass)
+            {
+                ModelState.AddModelError("OldPassword", "Mật khẩu hiện tại không chính xác");
+                return View(model);
+            }
+
+            if (ModelState.IsValid)
+            {
+                user.Password = model.NewPassword; // Lưu mật khẩu mới không băm
+                await _userService.Update(user);
+
+                TempData["ToastMessage"] = "Cập nhật mật khẩu thành công.";
+                TempData["ToastType"] = Constants.Success;
+
+                return RedirectToAction("ChangePassword");
+            }
+            return View(model);
+        }
 
 
         private IActionResult RedirectToLocal(string returnUrl)

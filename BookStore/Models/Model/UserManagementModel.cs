@@ -5,7 +5,7 @@ namespace BookStore.Models.Model
     public class UserManagementModel : User
     {
         public int TotalOrder { get; set; }
-        public int TotalMoney { get; set; }
+/*        public int TotalMoney { get; set; }*/
 
     }
     public class UserPagingModel

@@ -1,11 +1,11 @@
 ﻿using BookStore.Models.Data;
 
 namespace BookStore.Models.Model
-{ //tìm kiếm sách
+{ //tìm kiếm phân loại theo danh mục
     public class BookPagingModel
     {
         public string? Keyword { get; set; }
         public int? CategoryId { get; set; }
-        public PagingModel<Book> Paging { get; set; } //phân trang sách
+        public PagingModel<Book> Paging { get; set; } 
     }
 }
