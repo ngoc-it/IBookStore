@@ -88,33 +88,38 @@
                         @if (userConfig.RoleType == RoleEnum.Admin)
                         {
                             <li class="menu-item @(ViewBag.Menu == 3 ? "active" : "")">
-                                <a href="/admin/bookmanagement" class="menu-link">
+                                <a asp-controller="Admin" asp-action="BookManagement" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-copy"></i>
                                     <div>Quản lý sách</div>
                                 </a>
                             </li>
 
                             <li class="menu-item @(ViewBag.Menu == 2 ? "active" : "")">
-                                <a href="/admin/categorymanagement" class="menu-link">
+                                <a asp-controller="Admin" asp-action="CategoryManagement" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-detail"></i>
                                     <div>Quản lý danh mục</div>
                                 </a>
                             </li>
 
                             <li class="menu-item @(ViewBag.Menu == 4 ? "active" : "")">
-                                <a href="/admin/vouchermanagement" class="menu-link">
+                                <a asp-controller="Admin" asp-action="VoucherManagement" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-crown"></i>
                                     <div>Quản lý khuyến mại</div>
                                 </a>
                             </li>
 
                             <li class="menu-item @(ViewBag.Menu == 5 ? "active" : "")">
-                                <a href="/admin/usermanagement" class="menu-link">
+                                <a asp-controller="Admin" asp-action="UserManagement" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-user"></i>
                                     <div>Quản lý người dùng</div>
                                 </a>
                             </li>
-
+                            <li class="menu-item @(ViewBag.Menu == 6 ? "active" : "")">
+                                <a href="/admin/deliverymanagement" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-transfer"></i>
+                                    <div>Quản lý vận chuyển</div>
+                                </a>
+                            </li>
                         }
       
                     </ul>
@@ -222,20 +227,9 @@
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="~/assets/vendor/libs/jquery/jquery.js"></script>
-
-
-
     <script src="~/assets/vendor/libs/popper/popper.js"></script>
-
-
-
     <script src="~/assets/vendor/js/bootstrap.js"></script>
-
-
-
     <script src="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-
-
     <script src="~/assets/vendor/js/menu.js"></script>
     <!-- endbuild -->
     <!-- Main JS -->

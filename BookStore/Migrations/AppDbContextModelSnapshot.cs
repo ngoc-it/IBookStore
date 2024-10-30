@@ -241,7 +241,7 @@ namespace BookStore.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DeliveryId")
+                    b.Property<int>("DeliveryCode")
                         .HasColumnType("int");
 
                     b.Property<string>("DeliveryName")
@@ -304,13 +304,60 @@ namespace BookStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CancelReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DeliveryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OrderCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrderNote")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PaymentType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ShipCost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalMoney")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("VoucherId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -453,7 +500,7 @@ namespace BookStore.Migrations
                     b.Property<int>("UsedNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("VoucherId")
+                    b.Property<int>("VoucherCode")
                         .HasColumnType("int");
 
                     b.Property<string>("VoucherName")

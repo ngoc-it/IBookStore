@@ -4,33 +4,53 @@ using BookStore.Models.Code;
 using BookStore.Models.Data;
 using BookStore.Models.Model;
 using BookStore.Models.Service;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Rotativa.AspNetCore;
+using System.Text;
+using static BookStore.Constant.Enumerations;
 
 namespace BookStore.Controllers
 {
+    [Authorize]   
     public class CartController : Controller
     {
         private readonly IMapper _mapper;
         private readonly IUserConfig _userConfig;
+        private readonly ICartService _cartService;
         private readonly IBaseService<Book> _bookService;
         private readonly IBaseService<Category> _cateService;
-        private readonly IBaseService<Cart> _cartService;
+        private readonly IBaseService<Order> _orderService;
+        private readonly IBaseService<Voucher> _voucherService;
+        private readonly IBaseService<Delivery> _deliveryService;
+        private readonly IBaseService<OrderDetail> _orderDetailService;
 
         public CartController(IUserConfig userConfig,
+            IBaseService<OrderDetail> orderDetailService,
+            IBaseService<Delivery> deliveryService,
+            IBaseService<Voucher> voucherService,
             IBaseService<Category> cateService,
+            IBaseService<Order> orderService,
             IBaseService<Book> bookService,
-            IBaseService<Cart> cartService,
+            ICartService cartService,
             IMapper mapper)
         {
             _mapper = mapper;
             _userConfig = userConfig;
+            _cartService = cartService;
             _bookService = bookService;
             _cateService = cateService;
-            _cartService = cartService;
+            _orderService = orderService;
+            _voucherService = voucherService;
+            _deliveryService = deliveryService;
+            _orderDetailService = orderDetailService;
         }
-       
-        public async   Task<IActionResult> Index()
+
+
+        [HttpGet]
+        public async Task<IActionResult> Index(int? voucherId, int? deliveryId)
         {
             var userId = _userConfig.GetUserId();
 
@@ -52,8 +72,113 @@ namespace BookStore.Controllers
             ViewBag.CartCount = cartList.Count;
             ViewBag.ErrorProduct = model.CartItems.Count(x => !string.IsNullOrEmpty(x.ErrorMessage));
 
+            var deliveries = await _deliveryService.GetList(x => x.IsActive);
+
+            var deliveryModels = deliveries.OrderBy(x => x.Cost).Select(x => new ItemDropdownModel()
+            {
+                Id = x.Id,
+                Value = x.Cost,
+                Name = string.Concat(x.DeliveryName, $" ({x.Cost.ToString("#,##0")}đ)")
+            });
+
+            ViewBag.DeliveryList = new SelectList(deliveryModels, "Id", "Name");
+
+            // Mặc định set cho hình thức vận chuyển
+            if (deliveryId != null && deliveryId > 0)
+            {
+                var delivery = await _deliveryService.GetEntityById(deliveryId ?? 0);
+                if (delivery != null)
+                {
+                    model.DeliveryId = delivery.Id;
+                    model.ShipCost = delivery.Cost;
+                }
+            }
+            else
+            {
+                var delivery = deliveries.OrderBy(x => x.Cost).FirstOrDefault();
+                if (delivery != null)
+                {
+                    model.DeliveryId = delivery.Id;
+                    model.ShipCost = delivery.Cost;
+                }
+            }
+
+            if (voucherId != null && voucherId > 0)
+            {
+                var voucher = await _voucherService.GetEntityById(voucherId ?? 0);
+                if (voucher != null)
+                {
+                    model.VoucherId = voucher.Id;
+                    model.VoucherCode = voucher.VoucherCode;
+                    model.Discount = voucher.Discount;
+                }
+            }
+
             return View(model);
         }
+        [HttpPost]
+        public async Task<IActionResult> Index(int voucherCode, int deliveryId)
+        {
+            var userId = _userConfig.GetUserId();
+            var cartList = await _cartService.GetList(x => x.UserId == userId);
+            ViewBag.CartCount = cartList?.Count ?? 0;
+
+            var model = await GetCartModel(cartList);
+            ViewBag.ErrorProduct = model.CartItems.Count(x => !string.IsNullOrEmpty(x.ErrorMessage));
+
+            // Thiết lập thông tin vận chuyển
+            var delivery = await _deliveryService.GetEntityById(deliveryId);
+            if (delivery != null)
+            {
+                model.DeliveryId = delivery.Id;
+                model.ShipCost = delivery.Cost;
+            }
+
+            // Kiểm tra mã giảm giá dạng int
+            var voucher = await _voucherService.Get(x => x.IsActive && x.VoucherCode == voucherCode);
+
+            if (voucher == null)
+            {
+                ViewBag.ToastType = Constants.Error;
+                ViewBag.ToastMessage = "Mã giảm giá không khả dụng.";
+            }
+            else
+            {
+                if (voucher.Quantity <= voucher.UsedNumber)
+                {
+                    ViewBag.ToastType = Constants.Error;
+                    ViewBag.ToastMessage = "Mã giảm giá đã sử dụng hết, vui lòng chọn mã khác.";
+                }
+                else if (voucher.MinAmount > model.TotalMoney)
+                {
+                    ViewBag.ToastType = Constants.Error;
+                    ViewBag.ToastMessage = $"Chưa đạt giá trị đơn hàng tối thiểu {voucher.MinAmount.ToString("#,##0")} đ";
+                }
+                else
+                {
+                    ViewBag.ToastType = Constants.Success;
+                    ViewBag.ToastMessage = "Đã áp mã giảm giá.";
+
+                    model.VoucherId = voucher.Id;
+                    model.VoucherCode = voucherCode;
+                    model.Discount = voucher.Discount;
+                }
+            }
+
+            var deliveries = await _deliveryService.GetList(x => x.IsActive);
+            var deliveryModels = deliveries.OrderBy(x => x.Cost).Select(x => new ItemDropdownModel()
+            {
+                Id = x.Id,
+                Value = x.Cost,
+                Name = string.Concat(x.DeliveryName, $" ({x.Cost.ToString("#,##0")}đ)")
+            });
+
+            ViewBag.DeliveryList = new SelectList(deliveryModels, "Id", "Name");
+
+            return View(model);
+        }
+
+
         private async Task<CartModel> GetCartModel(List<Cart> cartList)
         {
             var model = new CartModel();
@@ -140,18 +265,139 @@ namespace BookStore.Controllers
 
             return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
         }
+        
+        public async Task<IActionResult> Delivering(int? pageIndex)
+        {
+            ViewBag.ToastType = Constants.None;
 
-        [HttpPost]
-        public async Task<IActionResult> Index(string voucherCode, int deliveryId)
+            if (TempData["ToastMessage"] != null && TempData["ToastType"] != null)
+            {
+                ViewBag.ToastMessage = TempData["ToastMessage"];
+                ViewBag.ToastType = TempData["ToastType"];
+
+                TempData.Remove("ToastMessage");
+                TempData.Remove("ToastType");
+            }
+
+            var userId = _userConfig.GetUserId();
+            ViewBag.CartCount = await _cartService.Count(x => x.UserId == userId);
+
+            var pagingResult = await _cartService.GetPagingOrder(Enumerations.OrderStatus.Shipping, pageIndex, userId);
+
+            return View(pagingResult);
+        }
+        [HttpGet]
+        public async Task<IActionResult> ConfirmOrder(int deliveryId, int? voucherId)
         {
             var userId = _userConfig.GetUserId();
             var cartList = await _cartService.GetList(x => x.UserId == userId);
             ViewBag.CartCount = cartList?.Count ?? 0;
 
-            var model = await GetCartModel(cartList);
-            ViewBag.ErrorProduct = model.CartItems.Count(x => !string.IsNullOrEmpty(x.ErrorMessage));
+            var cartModel = await GetCartModel(cartList);
+
+            if (voucherId != null && voucherId > 0)
+            {
+                var voucher = await _voucherService.GetEntityById(voucherId ?? 0);
+
+                cartModel.VoucherCode = voucher.VoucherCode;
+                cartModel.Discount = voucher.Discount;
+            }
+
+            var delivery = await _deliveryService.GetEntityById(deliveryId);
+            if (delivery != null)
+            {
+                cartModel.DeliveryId = deliveryId;
+                cartModel.ShipCost = delivery.Cost;
+            }
+
+            ViewBag.CartInfo = cartModel;
+
+            var model = new CartConfirmModel()
+            {
+                OrderCode = RandomString(10),
+                VoucherId = voucherId,
+                ShipCost = cartModel.ShipCost,
+                Discount = cartModel.Discount,
+                TotalMoney = cartModel.TotalMoney,
+                PaymentType = PaymentType.Cod,
+                DeliveryId = deliveryId,
+            };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmOrder(CartConfirmModel model)
+        {
+            var userId = _userConfig.GetUserId();
+            var cartList = await _cartService.GetList(x => x.UserId == userId);
+
+            if (ModelState.IsValid)
+            {
+                if (cartList == null || !cartList.Any())
+                {
+                    TempData["ToastMessage"] = "Không có sản phẩm trong giỏ hàng.";
+                    TempData["ToastType"] = Constants.Error;
+
+                    return RedirectToAction("Index", "Cart");
+                }
+                else
+                {
+                    await _cartService.CreateNewOrder(userId, model);
+
+                    TempData["ToastMessage"] = "Đã xác nhận đơn hàng.";
+                    TempData["ToastType"] = Constants.Success;
+
+                    return RedirectToAction("Index", "Cart");
+                }
+            }
+
+            ViewBag.CartCount = cartList?.Count ?? 0;
+
+            var cartModel = await GetCartModel(cartList);
+
+            if (model.VoucherId != null && model.VoucherId > 0)
+            {
+                var voucher = await _voucherService.GetEntityById(model.VoucherId ?? 0);
+
+                cartModel.VoucherCode = voucher.VoucherCode;
+                cartModel.Discount = voucher.Discount;
+            }
+
+            var delivery = await _deliveryService.GetEntityById(model.DeliveryId);
+            if (delivery != null)
+            {
+                cartModel.DeliveryId = delivery.Id;
+                cartModel.ShipCost = delivery.Cost;
+            }
+
+            ViewBag.CartInfo = cartModel;
+
+            return View(model);
+        }
+        
+
+        // Generates a random string with a given size.
+        public string RandomString(int size, bool lowerCase = false)
+        {
+            var builder = new StringBuilder(size);
+
+            // Unicode/ASCII Letters are divided into two blocks
+            // (Letters 65–90 / 97–122):
+            // The first group containing the uppercase letters and
+            // the second group containing the lowercase.
+
+            // char is a single Unicode character
+            char offset = lowerCase ? 'a' : 'A';
+            const int lettersOffset = 26; // A...Z or a..z: length = 26
+
+            for (var i = 0; i < size; i++)
+            {
+                var @char = (char)new Random().Next(offset, offset + lettersOffset);
+                builder.Append(@char);
+            }
+
+            return lowerCase ? builder.ToString().ToLower() : builder.ToString();
         }
     }
 }

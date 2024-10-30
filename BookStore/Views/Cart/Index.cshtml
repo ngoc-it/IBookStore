@@ -5,7 +5,86 @@
     ViewData["Title"] = "Giỏ Hàng";
 }
 @section css{
-    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    @* <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> *@
+    <style>
+        /* Cơ bản cho giỏ hàng */
+
+
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+            .table th, .table td {
+                padding: 15px;
+                text-align: center;
+            }
+
+            .table th {
+                background-color: #6c757d; /* Màu nền cho tiêu đề bảng */
+                color: white;
+            }
+
+            .table td {
+                border: 1px solid #dee2e6;
+            }
+
+        .img-book-td {
+            width: 50px; /* Đặt kích thước cho hình ảnh sách trong giỏ hàng */
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .empty-table {
+            text-align: center;
+        }
+
+        .ctn-empty-table {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .red-color {
+            color: red; /* Màu đỏ cho thông báo lỗi */
+        }
+
+        /* Nút điều chỉnh số lượng */
+/*         .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+ */
+/*         .input-group-btn {
+            cursor: pointer;
+        } */
+
+        .btn-minus, .btn-plus {
+            background-color: #007bff; /* Màu nền cho nút */
+            color: white;
+        }
+
+            .btn-minus:hover, .btn-plus:hover {
+                background-color: #0056b3; /* Màu nền cho nút khi hover */
+            }
+
+  /*       .btn {
+            border: none; /* Bỏ viền cho nút */
+        } */
+
+        /* Cột bên phải (thông tin mã khuyến mại) */
+        .col-lg-4 {
+            background-color: #f8f9fa; /* Màu nền cho cột mã khuyến mại */
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+       
+
+    </style>
 }
 <!-- Cart Start -->
 <div class="container-fluid">
@@ -95,9 +174,48 @@
                         </div>
                         <div class="col-lg-4">
                             <h6>Mã khuyến mại</h6>
-                            
-
-                           
+                            @Html.HiddenFor(m => m.VoucherId)
+                            <form class="mb-3" method="post">
+                                <div class="input-group">
+                                    @Html.HiddenFor(m => m.DeliveryId)
+                                    <input type="text" class="form-control p-4" id="voucherCode" name="voucherCode" value="@Model.VoucherCode" placeholder="Nhập mã khuyến mại">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary">Áp dụng</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <h6>Phương thức vận chuyển</h6>
+                             @Html.DropDownList("DeliveryId", (IEnumerable<SelectListItem>)ViewBag.DeliveryList, new
+                                {
+                                    @class = "custom-select mb-3",
+                                    @onchange = "changeDeliveryMethod(this.value)"
+                                })
+                            <div class="card border-secondary">
+                                <div class="card-header bg-secondary border-0">
+                                    <h4 class="font-weight-semi-bold m-0">Tổng cộng</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h6 class="font-weight-medium">Tiền hàng:</h6>
+                                        <h6 class="font-weight-medium">@(Model.GrossMoney.ToString("#,##0")) đ</h6>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h6 class="font-weight-medium">Phí vận chuyển:</h6>
+                                        <h6 class="font-weight-medium">@(Model.ShipCost.ToString("#,##0")) đ</h6>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="font-weight-medium">Khuyến mại:</h6>
+                                        <h6 class="font-weight-medium text-muted"><del>@(Model.Discount.ToString("#,##0")) đ</del></h6>
+                                    </div>
+                                </div>
+                                <div class="card-footer border-secondary bg-transparent">
+                                    <div class="d-flex justify-content-between mt-2">
+                                        <h5 class="font-weight-bold">Tổng tiền:</h5>
+                                        <h5 class="font-weight-bold">@(Model.TotalMoney.ToString("#,##0")) đ</h5>
+                                    </div>
+                                    <button class="btn btn-block btn-primary mt-3 py-3" onclick="confirmOrder()">Đặt hàng</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -174,6 +292,32 @@
             });
         } 
     }
+        function confirmOrder() {
+            if ('@Model.CartItems' != null && '@Model.CartItems.Count' > 0) {
+                if ('@ViewBag.ErrorProduct' > 0) {
+                    showErrorToast('Có sản phẩm không hợp lệ trong giỏ hàng, vui lòng kiểm tra lại.');
+                }
+                else {
+                    if (!'@Model.VoucherId' || '@Model.VoucherId' == 0 || '@Model.VoucherId' == '') {
+                        window.location.href = `/cart/confirmorder?deliveryId=${'@Model.DeliveryId'}`;
+                    }
+                    else {
+                        window.location.href = `/cart/confirmorder?deliveryId=${'@Model.DeliveryId'}&voucherId=${'@Model.VoucherId'}`;
+                    }
+                }
+            }
+            else {
+                showErrorToast('Bạn chưa có sản phẩm trong giỏ hàng');
+            }
+        }
+        function changeDeliveryMethod(val) {
+            if (!'@Model.VoucherId' || '@Model.VoucherId' == 0 || '@Model.VoucherId' == '') {
+                window.location.href = `/cart?deliveryId=${val}`;
+            }
+            else {
+                window.location.href = `/cart?deliveryId=${val}&voucherId=${'@Model.VoucherId'}`;
+            }
+        }
         function showErrorToast(msg) {
             $('.toast-placement').removeClass('bg-success').addClass('bg-danger');
             $('.toast-placement .title').text('Thất bại');

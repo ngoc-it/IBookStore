@@ -1,10 +1,39 @@
 ﻿using BookStore.Models.Data;
+using static BookStore.Constant.Enumerations;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookStore.Models.Model
 {
     public class CartModel
     {
         public List<CartItemModel> CartItems { get; set; } = new List<CartItemModel>();
+        public int? VoucherId { get; set; }
+        public int? VoucherCode { get; set; }
+        public int? DeliveryId { get; set; }
+        public int ShipCost { get; set; }
+        public int Discount { get; set; }
+        public int GrossMoney
+        {
+            get
+            {
+                return CartItems.Sum(x => x.TotalMoney);
+            }
+            set { }
+        }
+        public int TotalMoney
+        {
+            get
+            {
+                var money = GrossMoney + ShipCost - Discount;
+                return money < 0 ? 0 : money;
+            }
+            set { }
+        }
+        public string CustomerName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+        public string CustomerAddress { get; set; }
+        public string OrderNote { get; set; }
     }
     public class CartItemModel : Cart
     {
@@ -24,4 +53,5 @@ namespace BookStore.Models.Model
         }
         public string? ErrorMessage { get; set; }
     }
+    
 }

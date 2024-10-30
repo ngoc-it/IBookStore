@@ -11,7 +11,7 @@
 .authentication-wrapper.authentication-basic {
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: hidden; 
 }
 .authentication-wrapper.authentication-cover {
   align-items: flex-start;

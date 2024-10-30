@@ -3,7 +3,6 @@
  */
 
 'use strict';
-
 (function () {
   // On hiding modal, remove iframe video/audio to stop playing
   const youTubeModal = document.querySelector('#youTubeModal'),

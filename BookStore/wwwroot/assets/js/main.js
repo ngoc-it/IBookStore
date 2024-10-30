@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Main
  */
 
@@ -7,112 +7,106 @@
 let menu, animate;
 
 (function () {
-  // Initialize menu
-  //-----------------
+    // Khởi tạo menu
+    //-----------------
 
-  let layoutMenuEl = document.querySelectorAll('#layout-menu');
-  layoutMenuEl.forEach(function (element) {
-    menu = new Menu(element, {
-      orientation: 'vertical',
-      closeChildren: false
+    // Lấy tất cả các phần tử có id là 'layout-menu' và khởi tạo menu
+    let layoutMenuEl = document.querySelectorAll('#layout-menu');
+    layoutMenuEl.forEach(function (element) {
+        // Tạo menu với cấu hình chiều dọc và không tự động đóng các menu con
+        menu = new Menu(element, {
+            orientation: 'vertical',
+            closeChildren: false
+        });
+        // Cuộn đến menu đang hoạt động nhưng không dùng hiệu ứng cuộn
+        window.Helpers.scrollToActive((animate = false));
+        window.Helpers.mainMenu = menu;
     });
-    // Change parameter to true if you want scroll animation
-    window.Helpers.scrollToActive((animate = false));
-    window.Helpers.mainMenu = menu;
-  });
 
-  // Initialize menu togglers and bind click on each
-  let menuToggler = document.querySelectorAll('.layout-menu-toggle');
-  menuToggler.forEach(item => {
-    item.addEventListener('click', event => {
-      event.preventDefault();
-      window.Helpers.toggleCollapsed();
+    // Khởi tạo menu togglers và gắn sự kiện click cho từng cái
+    let menuToggler = document.querySelectorAll('.layout-menu-toggle');
+    menuToggler.forEach(item => {
+        item.addEventListener('click', event => {
+            event.preventDefault(); // Ngăn chặn hành động mặc định
+            window.Helpers.toggleCollapsed(); // Đổi trạng thái đóng/mở của menu
+        });
     });
-  });
 
-  // Display menu toggle (layout-menu-toggle) on hover with delay
-  let delay = function (elem, callback) {
-    let timeout = null;
-    elem.onmouseenter = function () {
-      // Set timeout to be a timer which will invoke callback after 300ms (not for small screen)
-      if (!Helpers.isSmallScreen()) {
-        timeout = setTimeout(callback, 300);
-      } else {
-        timeout = setTimeout(callback, 0);
-      }
+    // Hiển thị menu toggler khi di chuột vào menu, với độ trễ
+    let delay = function (elem, callback) {
+        let timeout = null;
+        elem.onmouseenter = function () {
+            // Đặt thời gian chờ 300ms (không dùng cho màn hình nhỏ)
+            timeout = setTimeout(callback, Helpers.isSmallScreen() ? 0 : 300);
+        };
+
+        elem.onmouseleave = function () {
+            // Ẩn menu toggler và xóa thời gian chờ khi chuột rời khỏi
+            document.querySelector('.layout-menu-toggle').classList.remove('d-block');
+            clearTimeout(timeout);
+        };
     };
-
-    elem.onmouseleave = function () {
-      // Clear any timers set to timeout
-      document.querySelector('.layout-menu-toggle').classList.remove('d-block');
-      clearTimeout(timeout);
-    };
-  };
-  if (document.getElementById('layout-menu')) {
-    delay(document.getElementById('layout-menu'), function () {
-      // not for small screen
-      if (!Helpers.isSmallScreen()) {
-        document.querySelector('.layout-menu-toggle').classList.add('d-block');
-      }
-    });
-  }
-
-  // Display in main menu when menu scrolls
-  let menuInnerContainer = document.getElementsByClassName('menu-inner'),
-    menuInnerShadow = document.getElementsByClassName('menu-inner-shadow')[0];
-  if (menuInnerContainer.length > 0 && menuInnerShadow) {
-    menuInnerContainer[0].addEventListener('ps-scroll-y', function () {
-      if (this.querySelector('.ps__thumb-y').offsetTop) {
-        menuInnerShadow.style.display = 'block';
-      } else {
-        menuInnerShadow.style.display = 'none';
-      }
-    });
-  }
-
-  // Init helpers & misc
-  // --------------------
-
-  // Init BS Tooltip
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-  });
-
-  // Accordion active class
-  const accordionActiveFunction = function (e) {
-    if (e.type == 'show.bs.collapse' || e.type == 'show.bs.collapse') {
-      e.target.closest('.accordion-item').classList.add('active');
-    } else {
-      e.target.closest('.accordion-item').classList.remove('active');
+    if (document.getElementById('layout-menu')) {
+        delay(document.getElementById('layout-menu'), function () {
+            if (!Helpers.isSmallScreen()) {
+                // Chỉ hiện menu toggler nếu màn hình không phải là nhỏ
+                document.querySelector('.layout-menu-toggle').classList.add('d-block');
+            }
+        });
     }
-  };
 
-  const accordionTriggerList = [].slice.call(document.querySelectorAll('.accordion'));
-  const accordionList = accordionTriggerList.map(function (accordionTriggerEl) {
-    accordionTriggerEl.addEventListener('show.bs.collapse', accordionActiveFunction);
-    accordionTriggerEl.addEventListener('hide.bs.collapse', accordionActiveFunction);
-  });
+    // Hiển thị bóng cho menu khi cuộn
+    let menuInnerContainer = document.getElementsByClassName('menu-inner'),
+        menuInnerShadow = document.getElementsByClassName('menu-inner-shadow')[0];
+    if (menuInnerContainer.length > 0 && menuInnerShadow) {
+        menuInnerContainer[0].addEventListener('ps-scroll-y', function () {
+            // Hiển thị bóng khi thanh cuộn di chuyển
+            menuInnerShadow.style.display = this.querySelector('.ps__thumb-y').offsetTop ? 'block' : 'none';
+        });
+    }
 
-  // Auto update layout based on screen size
-  window.Helpers.setAutoUpdate(true);
+    // Khởi tạo các chức năng trợ giúp và các mục bổ sung
+    // --------------------
 
-  // Toggle Password Visibility
-  window.Helpers.initPasswordToggle();
+    // Khởi tạo Tooltip Bootstrap
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
 
-  // Speech To Text
-  window.Helpers.initSpeechToText();
+    // Thêm lớp 'active' cho các mục accordion khi mở
+    const accordionActiveFunction = function (e) {
+        if (e.type == 'show.bs.collapse' || e.type == 'show.bs.collapse') {
+            e.target.closest('.accordion-item').classList.add('active');
+        } else {
+            e.target.closest('.accordion-item').classList.remove('active');
+        }
+    };
 
-  // Manage menu expanded/collapsed with templateCustomizer & local storage
-  //------------------------------------------------------------------
+    // Thêm sự kiện cho accordion khi mở/đóng
+    const accordionTriggerList = [].slice.call(document.querySelectorAll('.accordion'));
+    accordionTriggerList.map(function (accordionTriggerEl) {
+        accordionTriggerEl.addEventListener('show.bs.collapse', accordionActiveFunction);
+        accordionTriggerEl.addEventListener('hide.bs.collapse', accordionActiveFunction);
+    });
 
-  // If current layout is horizontal OR current window screen is small (overlay menu) than return from here
-  if (window.Helpers.isSmallScreen()) {
-    return;
-  }
+    // Tự động cập nhật bố cục dựa vào kích thước màn hình
+    window.Helpers.setAutoUpdate(true);
 
-  // If current layout is vertical and current window screen is > small
+    // Chuyển đổi trạng thái hiển thị mật khẩu
+    window.Helpers.initPasswordToggle();
 
-  // Auto update menu collapsed/expanded based on the themeConfig
-  window.Helpers.setCollapsed(true, false);
+    // Kích hoạt tính năng chuyển đổi giọng nói thành văn bản
+    window.Helpers.initSpeechToText();
+
+    // Quản lý trạng thái mở/đóng của menu với localStorage
+    //------------------------------------------------------------------
+
+    // Nếu màn hình nhỏ hoặc bố cục hiện tại là ngang, bỏ qua
+    if (window.Helpers.isSmallScreen()) {
+        return;
+    }
+
+    // Nếu bố cục là chiều dọc và màn hình lớn, tự động điều chỉnh trạng thái menu
+    window.Helpers.setCollapsed(true, false);
 })();

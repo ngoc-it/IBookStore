@@ -20,6 +20,7 @@ namespace BookStore.Controllers
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IBaseService<Category> _categoryService;
         private readonly IBaseService<Voucher> _voucherService;
+        private readonly IBaseService<Delivery> _deliveryService;
         private readonly IBookService _bookService;
         private readonly IBaseService<User> _userService;
         private readonly IConfiguration _configuration;
@@ -31,6 +32,7 @@ namespace BookStore.Controllers
         public AdminController(IBaseService<Category> categoryService,
             IWebHostEnvironment environment,
             IBaseService<Voucher> voucherService,
+            IBaseService<Delivery> deliveryService,
             IBookService bookService,
             IBaseService<User> userService,
             IConfiguration configuration,
@@ -44,6 +46,7 @@ namespace BookStore.Controllers
 
             _categoryService = categoryService;
             _voucherService = voucherService;
+            _deliveryService = deliveryService;
             _configuration = configuration;
             _adminService = adminService;
 
@@ -179,7 +182,7 @@ namespace BookStore.Controllers
         #region SACH
         //GET: /Admin/BookManagement
         [HttpGet]
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin)] //vai trò là admin
         public async Task<IActionResult> BookManagement(int? pageIndex, string? keyword, int? categoryId)
         {
             ViewBag.ToastType = Constants.None;
@@ -191,29 +194,30 @@ namespace BookStore.Controllers
                 TempData.Remove("ToastMessage");
                 TempData.Remove("ToastType");
             }
-
+            //khởi tạo mdoel truyền dữ liệu cho view
             var result = new BookPagingModel()
             {
-                CategoryId = categoryId,
-                Keyword = keyword,
-                Paging = new PagingModel<Book>()
+                CategoryId = categoryId, //lưu trữ ID của danh mục nếu có
+                Keyword = keyword, //từ khóa tìm kiếm nếu có
+                Paging = new PagingModel<Book>() // tạo đối tượng phan trang
             };
-
-            var books = await _bookService.GetList(x => (string.IsNullOrEmpty(keyword) ? x.Id > 0 : x.BookName.ToLower().Contains(keyword.ToLower().Trim()))
-                && (categoryId != null && categoryId != 0 ? x.CategoryId == categoryId : x.Id > 0));
-
+            // lấy danh sách từ dịch vụ với điều kiện tìm kiếm
+            var books = await _bookService.GetList(x => (string.IsNullOrEmpty(keyword) ? x.Id > 0 : x.BookName.ToLower().Contains(keyword.ToLower().Trim())) //nếu có từ khóa , kiểm tra tên sách
+                && (categoryId != null && categoryId != 0 ? x.CategoryId == categoryId : x.Id > 0)); // kiểm tra danh mục sách nếu có
+            // cập nhật dữ liệu phân trang
             result.Paging = new PagingModel<Book>()
             {
-                TotalRecord = books.Count(),
-                DataPaging = books.OrderByDescending(x => x.UpdatedDate).ToPagedList(pageIndex ?? 1, 10),
+                TotalRecord = books.Count(), // tổng số tượng sách tìm thấy
+                DataPaging = books.OrderByDescending(x => x.UpdatedDate).ToPagedList(pageIndex ?? 1, 10), //sắp xếp theo ngày cập nhật giảm dần, phân trang mặc định là 1 , mỗi trang 10 sách
             };
-
+            //lấy tất cả dahnh mục từ dịch vụ
             var cate = _categoryService.GetAll();
+            //thêm mục "Chọn danh mục" vào đầu danh sách
             cate.Insert(0, new Category()
             {
                 CategoryName = "Chọn danh mục"
             });
-
+            //tạo selectlist cho danh sách danh mục để hiển thị trong view
             SelectList cateList = new SelectList(cate, "Id", "CategoryName");
             // Set vào ViewBag
             ViewBag.CategoryList = cateList;
@@ -281,7 +285,7 @@ namespace BookStore.Controllers
                 }
                 var bookExist = await _bookService.Exist(x => x.BookId == model.BookId && model.Id != x.Id);
 
-                /* var bookExist = await _bookService.Exist(x => x.BookId.ToLower().Trim().Equals(model.BookId.ToLower().Trim()) && model.Id != x.Id);*/
+
 
                 if (bookExist)
                 {
@@ -578,8 +582,228 @@ namespace BookStore.Controllers
 
         #endregion
         #region VOUCHER
-        #endregion
+        //GET: /Admin/VoucherManagement
+        [HttpGet]
+        [Authorize(Roles = Role.Admin)]
+        public IActionResult VoucherManagement(int? pageIndex)
+        {
+            ViewBag.ToastType = Constants.None;
+            if (TempData["ToastMessage"] != null && TempData["ToastType"] != null)
+            {
+                ViewBag.ToastMessage = TempData["ToastMessage"];
+                ViewBag.ToastType = TempData["ToastType"];
 
+                TempData.Remove("ToastMessage");
+                TempData.Remove("ToastType");
+            }
+
+            var vouchers = _voucherService.GetAll();
+
+            var pagingResult = new PagingModel<Voucher>()
+            {
+                TotalRecord = vouchers.Count(),
+                DataPaging = vouchers.OrderByDescending(x => x.UpdatedDate).ToPagedList(pageIndex ?? 1, 10),
+            };
+
+            return View(pagingResult);
+        }
+
+        //Get: /Admin/VoucherById
+        [HttpGet]
+        public async Task<JsonResult> VoucherById(int id)
+        {
+            var entity = await _voucherService.GetEntityById(id);
+
+            return Json(entity);
+        }
+
+        //Get: /Admin/ExistVoucherCode
+        [HttpGet]
+        public async Task<JsonResult> ExistVoucherCode(int code, int? id)
+        {
+            // Tìm kiếm VoucherCode với code là kiểu int
+            var exist = await _voucherService.Exist(x => x.VoucherCode == code
+                                                            && (id != null && id != 0 ? x.Id != id : x.Id > 0));
+
+            return Json(exist);
+        }
+
+
+        //Post: /Admin/InsertVoucher
+        [HttpPost]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> InsertVoucher([FromBody] Voucher model)
+        {
+            var redirectUrl = Url.Action("VoucherManagement", "Admin");
+
+            if (ModelState.IsValid)
+            {
+                await _voucherService.Insert(model);
+
+                TempData["ToastMessage"] = "Thêm mã khuyến mại thành công.";
+                TempData["ToastType"] = Constants.Success;
+                return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
+            }
+
+            TempData["ToastMessage"] = "Có lỗi xảy ra trong quá trình xử lý.";
+            TempData["ToastType"] = Constants.Error;
+            return Json(new { redirectToUrl = redirectUrl, status = Constants.Error });
+        }
+
+        //Put: /Admin/UpdateVoucher
+        [HttpPut]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> UpdateVoucher([FromBody] Voucher model)
+        {
+            var redirectUrl = Url.Action("VoucherManagement", "Admin");
+
+            if (ModelState.IsValid)
+            {
+                await _voucherService.Update(model);
+
+                TempData["ToastMessage"] = "Cập nhật mã khuyến mại thành công.";
+                TempData["ToastType"] = Constants.Success;
+                return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
+            }
+
+            TempData["ToastMessage"] = "Có lỗi xảy ra trong quá trình xử lý.";
+            TempData["ToastType"] = Constants.Error;
+            return Json(new { redirectToUrl = redirectUrl, status = Constants.Error });
+        }
+
+        //Delete: /Admin/DeleteVoucher
+        [HttpDelete]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> DeleteVoucher(int id)
+        {
+            var redirectUrl = Url.Action("VoucherManagement", "Admin");
+
+            if (ModelState.IsValid)
+            {
+                await _voucherService.Delete(id);
+
+                TempData["ToastMessage"] = "Xóa mã khuyến mại thành công.";
+                TempData["ToastType"] = Constants.Success;
+                return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
+            }
+
+            TempData["ToastMessage"] = "Có lỗi xảy ra trong quá trình xử lý.";
+            TempData["ToastType"] = Constants.Error;
+            return Json(new { redirectToUrl = redirectUrl, status = Constants.Error });
+        }
+
+        #endregion
+        #region VẬN CHUYỂN
+        //GET: /Admin/DeliveryManagement
+        [HttpGet]
+        [Authorize(Roles = Role.Admin)]
+        public IActionResult DeliveryManagement(int? pageIndex)
+        {
+            ViewBag.ToastType = Constants.None;
+            if (TempData["ToastMessage"] != null && TempData["ToastType"] != null)
+            {
+                ViewBag.ToastMessage = TempData["ToastMessage"];
+                ViewBag.ToastType = TempData["ToastType"];
+
+                TempData.Remove("ToastMessage");
+                TempData.Remove("ToastType");
+            }
+
+            var deliveries = _deliveryService.GetAll();
+
+            var pagingResult = new PagingModel<Delivery>()
+            {
+                TotalRecord = deliveries.Count(),
+                DataPaging = deliveries.OrderByDescending(x => x.UpdatedDate).ToPagedList(pageIndex ?? 1, 10),
+            };
+
+            return View(pagingResult);
+        }
+
+        //Get: /Admin/DeliveryById
+        [HttpGet]
+        public async Task<JsonResult> DeliveryById(int id)
+        {
+            var entity = await _deliveryService.GetEntityById(id);
+
+            return Json(entity);
+        }
+
+        //Get: /Admin/ExistDeliveryCode
+        [HttpGet]
+        public async Task<JsonResult> ExistDeliveryCode(int code, int? id)
+        {
+            // Kiểm tra sự tồn tại của DeliveryCode với code là kiểu int
+            var exist = await _deliveryService.Exist(x => x.DeliveryCode == code
+                                                            && (id != null && id != 0 ? x.Id != id : x.Id > 0));
+
+            return Json(exist);
+        }
+
+
+        //Post: /Admin/InsertDelivery
+        [HttpPost]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> InsertDelivery([FromBody] Delivery model)
+        {
+            var redirectUrl = Url.Action("DeliveryManagement", "Admin");
+
+            if (ModelState.IsValid)
+            {
+                await _deliveryService.Insert(model);
+
+                TempData["ToastMessage"] = "Thêm phương thức vận chuyển thành công.";
+                TempData["ToastType"] = Constants.Success;
+                return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
+            }
+
+            TempData["ToastMessage"] = "Có lỗi xảy ra trong quá trình xử lý.";
+            TempData["ToastType"] = Constants.Error;
+            return Json(new { redirectToUrl = redirectUrl, status = Constants.Error });
+        }
+
+        //Put: /Admin/UpdateDelivery
+        [HttpPut]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> UpdateDelivery([FromBody] Delivery model)
+        {
+            var redirectUrl = Url.Action("DeliveryManagement", "Admin");
+
+            if (ModelState.IsValid)
+            {
+                await _deliveryService.Update(model);
+
+                TempData["ToastMessage"] = "Cập nhật phương thức vận chuyển thành công.";
+                TempData["ToastType"] = Constants.Success;
+                return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
+            }
+
+            TempData["ToastMessage"] = "Có lỗi xảy ra trong quá trình xử lý.";
+            TempData["ToastType"] = Constants.Error;
+            return Json(new { redirectToUrl = redirectUrl, status = Constants.Error });
+        }
+
+        //Delete: /Admin/DeleteDelivery
+        [HttpDelete]
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IActionResult> DeleteDelivery(int id)
+        {
+            var redirectUrl = Url.Action("DeliveryManagement", "Admin");
+
+            if (ModelState.IsValid)
+            {
+                await _deliveryService.Delete(id);
+
+                TempData["ToastMessage"] = "Xóa phương thức vận chuyển thành công.";
+                TempData["ToastType"] = Constants.Success;
+                return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
+            }
+
+            TempData["ToastMessage"] = "Có lỗi xảy ra trong quá trình xử lý.";
+            TempData["ToastType"] = Constants.Error;
+            return Json(new { redirectToUrl = redirectUrl, status = Constants.Error });
+        }
+        #endregion
 
 
 

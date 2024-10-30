@@ -13,12 +13,11 @@ namespace BookStore.Models.Service
 
         public BookService(IGenericRepository<Book> baseRepo, ILogger<Book> logger,
             IBaseService<Category> cateService,
-            //IBaseService<BookReview> reviewService,
+
             IMapper mapper) : base(baseRepo, logger)
         {
             _mapper = mapper;
             _cateService = cateService;
-           // _reviewService = reviewService;
         }
 
         public List<Book> GetBookActiveInCategoryActive(Expression<Func<Book, bool>> expresstion)

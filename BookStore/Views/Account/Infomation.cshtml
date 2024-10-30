@@ -9,7 +9,145 @@
 }
 
 @section css {
+    @* <style>
+        body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
 
+    .container-fluid.account-info {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 0 20px;
+    }
+
+    h5 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    /* Form Styles */
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    .input-group-text {
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-right: 1px solid #ddd;
+        font-size: 18px;
+        color: #666;
+    }
+
+    input, select, textarea {
+        padding: 10px;
+        border: none;
+        outline: none;
+        flex: 1;
+        border-radius: 0;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    /* Row Styles */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+        .row .col-sm-2, .row .col-sm-4, .row .col-sm-1, .row .col-sm-3, .row .col-sm-10 {
+            padding: 0 10px;
+        }
+
+        .row .col-sm-2, .row .col-sm-1 {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .row .col-sm-4, .row .col-sm-3, .row .col-sm-5, .row .col-sm-10 {
+            padding-top: 5px;
+        }
+
+    /* Button Styles */
+    .btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+    /* Validation Message */
+    .text-danger {
+        color: #ff4d4d;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    /* Custom Form Styles */
+    .custom-select {
+        border-radius: 4px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        width: 100%;
+    }
+
+    /* Phone Mask */
+    .phone-mask {
+        border-radius: 4px;
+    }
+
+    /* Responsive Styles */
+    @@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+
+        .row .col-sm-2, .row .col-sm-1 {
+            justify-content: flex-start;
+        }
+
+        .row .col-sm-2, .row .col-sm-4, .row .col-sm-1, .row .col-sm-3, .row .col-sm-10 {
+            padding: 10px 0;
+        }
+    }
+</style> *@
 }
 
 @section scripts {
@@ -28,7 +166,7 @@
             <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
                 <div class="navbar-nav w-100 overflow-auto">
                     <a class="nav-item nav-link active">Thông tin tài khoản</a>
-                    @* <a href="/account/changepassword" class="nav-item nav-link">Đổi mật khẩu</a> *@
+                    
                     <a asp-controller="Account" asp-action="ChangePassword" class="nav-item nav-link">Đổi mật khẩu</a>
                 </div>
             </nav>
@@ -136,3 +274,84 @@
         </div>
     </div>
 </div>
+@* <div class="container">
+    <div class="sidebar">
+        <a href="/home class="back-link">← Quay lại</a>
+        <ul class="menu">
+            <li class="menu-item active">Thông tin tài khoản</li>
+            <li class="menu-item">Đổi mật khẩu</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h2>Thông tin tài khoản</h2>
+        <form class="form-container">
+            <div class="form-group">
+                <label for="username">Tên đăng nhập</label>
+                <div class="input-container">
+                    <span class="icon">👤</span>
+                    <input type="text" id="username" value="admin" readonly>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="lastName">Họ</label>
+                    <div class="input-container">
+                        <span class="icon">📛</span>
+                        <input type="text" id="lastName" value="Ngọc">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="firstName">Tên</label>
+                    <div class="input-container">
+                        <span class="icon">📛</span>
+                        <input type="text" id="firstName" value="Nguyễn">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birthdate">Ngày sinh</label>
+                    <div class="input-container">
+                        <span class="icon">📅</span>
+                        <input type="date" id="birthdate" value="2003-09-01">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Giới tính</label>
+                    <select id="gender">
+                        <option>Nữ</option>
+                        <option>Nam</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Số điện thoại</label>
+                    <div class="input-container">
+                        <span class="icon">📞</span>
+                        <input type="text" id="phone" value="0987654321">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-container">
+                        <span class="icon">✉️</span>
+                        <input type="email" id="email" value="ngoc@gmail.com">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="otherInfo">Thông tin khác</label>
+                <textarea id="otherInfo">Adminggggggggg77</textarea>
+            </div>
+
+            <button type="submit" class="save-button">Lưu</button>
+        </form>
+    </div>
+</div>
+ *@

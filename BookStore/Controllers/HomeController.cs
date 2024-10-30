@@ -54,7 +54,6 @@ namespace BookStore.Controllers
             ViewBag.BookNews = books.OrderByDescending(x => x.CreatedDate).Skip(0).Take(8).ToList();
             // Set vào ViewBag
             ViewBag.CategoryList = await _categoryService.GetList(x => x.IsActive);
-            ViewBag.News = _newsService.GetDbSet().OrderByDescending(x => x.CreatedDate).Skip(0).Take(6).ToList();
             var userId = _userConfig.GetUserId();
             ViewBag.CartCount = await _cartService.Count(x => x.UserId == userId);
 

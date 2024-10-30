@@ -17,7 +17,7 @@
     <meta name="author" content="">
 
     <title>Đăng nhập - Book Store</title>
-    <link href="~/img/logo-img.jpeg" rel="icon">
+    <link href="~/img/logo-img.png" rel="icon">
     <!-- Custom fonts for this template-->
     <link href="~/vendor/fontawesome/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -25,13 +25,13 @@
 
     <!-- Custom styles for this template-->
     <link href="~/css/sb-admin-2.css" rel="stylesheet">
+@*     <link href="~/Login/css/login.css" rel="stylesheet"> *@
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="~/assets/vendor/fonts/boxicons.css" />
     <link href="~/css/toast.css" rel="stylesheet" />
 </head>
 
-<body class="bg-gradient-primary" 
-style="background-color: #fff;background-image: linear-gradient(180deg, #c1763a4a 10%, #3d5cb85e 100%);background-size: cover;">
+<body class="bg-gradient-primary">
     <div class="container">
         <!-- Outer Row -->
         <div class="row justify-content-center">
@@ -49,6 +49,7 @@ style="background-color: #fff;background-image: linear-gradient(180deg, #c1763a4
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Chào mừng bạn!</h1>
                                     </div>
+                                   
                                     @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, true, new { @class = "user", role = "form" }))
                                     {
                                         <div class="form-group">
@@ -75,18 +76,14 @@ style="background-color: #fff;background-image: linear-gradient(180deg, #c1763a4
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Đăng nhập
                                         </button>
-                                        <hr>
-                                        <a href="/account/logingoogle" class="btn btn-google btn-user btn-block">
-                                           Đăng nhập với Google
-                                        </a>
                                     }
                                     <hr>
                                     <div class="text-center">
                                         <a class="small" >Quên mật khẩu?</a>
                                     </div>
                                     <div class="text-center">
-                                        @* <a class="small" href="@Url.Action("Register", "Account")">Bạn chưa có tài khoản? Đăng ký ngay!</a> *@
-                                        <a class="small" href="/account/register">Bạn chưa có tài khoản? Đăng ký ngay!</a>
+                                      <a class="small" href="@Url.Action("Register", "Account")">Bạn chưa có tài khoản? Đăng ký ngay!</a> 
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -95,17 +92,20 @@ style="background-color: #fff;background-image: linear-gradient(180deg, #c1763a4
                 </div>
             </div>
         </div>
+     @*    Kiểm tra xem có thông báo thành công nào không
+        @{
+            var successMessage = TempData["SuccessMessage"] as string;
+        }
 
-        <!-- Toast Message -->
-        <div id="toast-message" class="toast toast-placement @(TempData["ToastType"]?.ToString() == Constants.Success ? "bg-success" : "bg-danger") top-0 end-0 mr-3 mt-3" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" style="position: absolute; z-index: 9999;">
-            <div class="toast-header">
-                <i class="bx bx-bell mr-2"></i>
-                <div class="me-auto fw-semibold">@((TempData["ToastType"]?.ToString() == Constants.Success ? "Thành công" : "Thất bại"))</div>
-            </div>
-            <div class="toast-body">
-                @TempData["ToastMessage"]
-            </div>
-        </div>
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <script type="text/javascript">
+                alert("@successMessage");
+                window.location.href = "@ViewData["ReturnUrl"]"; // Chuyển hướng ngay sau khi hiển thị thông báo
+            </script>
+        } *@
+
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="~/vendor/jquery/jquery.min.js"></script>
@@ -119,17 +119,9 @@ style="background-color: #fff;background-image: linear-gradient(180deg, #c1763a4
 
 
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                // Kiểm tra nếu có thông báo từ TempData và hiển thị toast
-                var toastMessage = '@TempData["ToastMessage"]';
-                var toastType = '@TempData["ToastType"]';
 
-                if (toastMessage && toastType != 'None') {
-                    $('#toast-message').toast('show');
-                }
-            });
-        </script>
+
+
 
 
 </body>
