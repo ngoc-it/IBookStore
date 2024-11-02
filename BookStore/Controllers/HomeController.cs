@@ -2,10 +2,12 @@
 using BookStore.Models;
 using BookStore.Models.Code;
 using BookStore.Models.Data;
+using BookStore.Models.Model;
 using BookStore.Models.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using X.PagedList;
 using static BookStore.Constant.Enumerations;
 
 namespace BookStore.Controllers
@@ -101,6 +103,51 @@ namespace BookStore.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task<IActionResult> Search(int? pageIndex, string? keyword, int? categoryId, int? sortType)
+        {
+            ViewBag.Keyword = keyword;
+            ViewBag.CategoryId = categoryId;
+            ViewBag.SortType = sortType;
+            ViewBag.CategoryList = await _categoryService.GetList(x => x.IsActive);
+
+            var cate = await _categoryService.GetEntityById(categoryId ?? 0);
+            ViewBag.CategoryName = cate?.CategoryName ?? string.Empty;
+
+            var books = _bookService.GetBookActiveInCategoryActive(x => (string.IsNullOrEmpty(keyword) ? x.Id > 0 : x.BookName.ToLower().Contains(keyword.ToLower().Trim()))
+                && (categoryId != null && categoryId != 0 ? x.CategoryId == categoryId : x.Id > 0));
+
+            var dataPaging = books.OrderBy(x => x.BookName);
+
+            switch (sortType)
+            {
+                case (int)SortType.New:
+                    dataPaging = books.OrderByDescending(x => x.CreatedDate);
+                    break;
+                case (int)SortType.Sell:
+                    dataPaging = books.OrderByDescending(x => x.SoldQuantity);
+                    break;
+                case (int)SortType.Cheap:
+                    dataPaging = books.OrderBy(x => x.PriceDiscount ?? x.Price);
+                    break;
+                case (int)SortType.Expensive:
+                    dataPaging = books.OrderByDescending(x => x.PriceDiscount ?? x.Price);
+                    break;
+                default:
+                    break;
+            }
+
+            ViewBag.Paging = new PagingModel<Book>()
+            {
+                TotalRecord = books.Count(),
+                DataPaging = dataPaging.ToPagedList(pageIndex ?? 1, 9)
+            };
+
+            var userId = _userConfig.GetUserId();
+            ViewBag.CartCount = await _cartService.Count(x => x.UserId == userId);
+
+            return View();
         }
     }
 }

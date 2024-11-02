@@ -35,6 +35,7 @@ namespace BookStore.Models.Data
         [AllowNull]
         public int? PriceDiscount { get; set; } //Khuyến mãi
         public string? Description { get; set; }
+        public string InfoImage { get; set; }
         public bool IsActive { get; set; } = true; //Trạng thái
 
     }
