@@ -25,7 +25,7 @@ namespace BookStore.Controllers
         private readonly IBaseService<User> _userService;
         private readonly IConfiguration _configuration;
         private readonly IAdminService _adminService;
-        //private readonly ICartService _cartService;
+        private readonly ICartService _cartService;
         private readonly IAuthService _authService;
         private readonly IUserConfig _userConfig;
         private readonly IMapper _mapper;
@@ -37,7 +37,7 @@ namespace BookStore.Controllers
             IBaseService<User> userService,
             IConfiguration configuration,
             IAdminService adminService,
-            //ICartService cartService,
+            ICartService cartService,
             IAuthService authService,
             IUserConfig userConfig,
             IMapper mapper)
@@ -52,7 +52,7 @@ namespace BookStore.Controllers
 
 
             _bookService = bookService;
-            //_cartService = cartService;
+            _cartService = cartService;
             _userService = userService;
             _authService = authService;
             _userConfig = userConfig;
@@ -283,8 +283,9 @@ namespace BookStore.Controllers
                     ModelState.AddModelError("PriceDiscount", "Giá khuyến mại phải nhỏ hơn giá bán");
                     isValid = false;
                 }
-                var bookExist = await _bookService.Exist(x => x.BookId == model.BookId && model.Id != x.Id);
-
+                //var bookExist = await _bookService.Exist(x => x.BookId == model.BookId && model.Id != x.Id);
+                 var bookExist = await _bookService.Exist(x => x.BookId.ToLower().Trim().Equals(model.BookId.ToLower().Trim()) && model.Id != x.Id);
+                if (bookExist)
 
 
                 if (bookExist)
@@ -619,12 +620,13 @@ namespace BookStore.Controllers
 
         //Get: /Admin/ExistVoucherCode
         [HttpGet]
-        public async Task<JsonResult> ExistVoucherCode(int code, int? id)
+        public async Task<JsonResult> ExistVoucherCode(string code, int? id)
         {
             // Tìm kiếm VoucherCode với code là kiểu int
-            var exist = await _voucherService.Exist(x => x.VoucherCode == code
-                                                            && (id != null && id != 0 ? x.Id != id : x.Id > 0));
-
+            /* var exist = await _voucherService.Exist(x => x.VoucherCode == code
+                                                             && (id != null && id != 0 ? x.Id != id : x.Id > 0));*/
+            var exist = await _voucherService.Exist(x => x.VoucherCode.Trim().ToLower().Equals(code.Trim().ToLower())
+                                                             && (id != null && id != 0 ? x.Id != id : x.Id > 0));
             return Json(exist);
         }
 
@@ -806,7 +808,60 @@ namespace BookStore.Controllers
         #endregion
 
 
+        #region GIỎ HÀNG
+        //GET: /Admin/WaitingDelivery
+        [HttpGet]
+        public async Task<IActionResult> WaitingDelivery(int? pageIndex)
+        {
+            var pagingResult = await _cartService.GetPagingOrder(Enumerations.OrderStatus.Waiting, pageIndex);
 
+            return View(pagingResult);
+        }
+        //GET: /Admin/Delivering
+        [HttpGet]
+        public async Task<IActionResult> Delivering(int? pageIndex)
+        {
+            ViewBag.ToastType = Constants.None;
+            if (TempData["ToastMessage"] != null && TempData["ToastType"] != null)
+            {
+                ViewBag.ToastMessage = TempData["ToastMessage"];
+                ViewBag.ToastType = TempData["ToastType"];
+
+                TempData.Remove("ToastMessage");
+                TempData.Remove("ToastType");
+            }
+
+            var pagingResult = await _cartService.GetPagingOrder(Enumerations.OrderStatus.Shipping, pageIndex);
+
+            return View(pagingResult);
+        }
+        //GET: /Admin/OrderComplete
+        [HttpGet]
+        public async Task<IActionResult> OrderComplete(int? pageIndex)
+        {
+            var pagingResult = await _cartService.GetPagingOrder(Enumerations.OrderStatus.Complete, pageIndex);
+
+            return View(pagingResult);
+        }
+        //GET: /Admin/OrderCancel
+        [HttpGet]
+        public async Task<IActionResult> OrderCancel(int? pageIndex)
+        {
+            ViewBag.ToastType = Constants.None;
+            if (TempData["ToastMessage"] != null && TempData["ToastType"] != null)
+            {
+                ViewBag.ToastMessage = TempData["ToastMessage"];
+                ViewBag.ToastType = TempData["ToastType"];
+
+                TempData.Remove("ToastMessage");
+                TempData.Remove("ToastType");
+            }
+
+            var pagingResult = await _cartService.GetPagingOrder(Enumerations.OrderStatus.Cancel, pageIndex);
+
+            return View(pagingResult);
+        }
+        #endregion
 
 
     }

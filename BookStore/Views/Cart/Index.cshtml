@@ -5,86 +5,9 @@
     ViewData["Title"] = "Giỏ Hàng";
 }
 @section css{
-    @* <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> *@
-    <style>
-        /* Cơ bản cho giỏ hàng */
-
-
-        .table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-            .table th, .table td {
-                padding: 15px;
-                text-align: center;
-            }
-
-            .table th {
-                background-color: #6c757d; /* Màu nền cho tiêu đề bảng */
-                color: white;
-            }
-
-            .table td {
-                border: 1px solid #dee2e6;
-            }
-
-        .img-book-td {
-            width: 50px; /* Đặt kích thước cho hình ảnh sách trong giỏ hàng */
-            height: auto;
-            border-radius: 5px;
-        }
-
-        .empty-table {
-            text-align: center;
-        }
-
-        .ctn-empty-table {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .red-color {
-            color: red; /* Màu đỏ cho thông báo lỗi */
-        }
-
-        /* Nút điều chỉnh số lượng */
-/*         .input-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
- */
-/*         .input-group-btn {
-            cursor: pointer;
-        } */
-
-        .btn-minus, .btn-plus {
-            background-color: #007bff; /* Màu nền cho nút */
-            color: white;
-        }
-
-            .btn-minus:hover, .btn-plus:hover {
-                background-color: #0056b3; /* Màu nền cho nút khi hover */
-            }
-
-  /*       .btn {
-            border: none; /* Bỏ viền cho nút */
-        } */
-
-        /* Cột bên phải (thông tin mã khuyến mại) */
-        .col-lg-4 {
-            background-color: #f8f9fa; /* Màu nền cho cột mã khuyến mại */
-            padding: 20px;
-            border-radius: 5px;
-        }
-
-       
-
-    </style>
+     <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> 
+ 
+        
 }
 <!-- Cart Start -->
 <div class="container-fluid">
@@ -92,6 +15,10 @@
         <div class="col">
             <div class="nav nav-tabs justify-content-center border-secondary mb-4">
                 <a class="nav-item nav-link active" href="#">Giỏ hàng</a>
+                <a class="nav-item nav-link" href="/cart/waiting">Chờ lấy hàng</a>
+                <a class="nav-item nav-link" href="/cart/delivering">Đang giao hàng</a>
+@*                 <a class="nav-item nav-link" href="/cart/ordercomplete">Hoàn thành</a>
+                <a class="nav-item nav-link" href="/cart/ordercancel">Đã hủy</a> *@
             </div>
             <div class="tab-content">
                 <div class="tab-pane fade show active">
@@ -226,41 +153,74 @@
 <!-- Cart End -->
 @section scripts {
     <script>
-        // Product Quantity
+        // // Product Quantity
+        // $('.quantity button').on('click', function () {
+        //     var button = $(this);
+        //     let maxQuantity = parseInt(button.attr('max-quantity'));
+        //     var oldValue = button.parent().parent().find('input').val();
+        //     let cartId = parseInt(button.attr('cart-id'));
+        //     var newVal = 1;
+
+        //     if (button.hasClass('btn-plus')) {
+        //         newVal = parseFloat(oldValue);
+
+        //         if (oldValue < maxQuantity) {
+        //             newVal = parseFloat(oldValue) + 1;
+        //             changeQuantity(cartId, newVal);
+        //         }
+        //         else if (oldValue > maxQuantity) {
+        //             newVal = maxQuantity;
+        //             changeQuantity(cartId, newVal);
+        //         }
+        //     } else {
+        //         if (oldValue > maxQuantity) {
+        //             newVal = maxQuantity;
+        //             changeQuantity(cartId, newVal);
+        //         }
+        //         else if (oldValue > 1) {
+        //             newVal = parseFloat(oldValue) - 1;
+        //             changeQuantity(cartId, newVal);
+        //         }
+        //         else {
+        //             newVal = 1;
+        //         }
+        //     }
+        //     button.parent().parent().find('input').val(newVal);
+        // });
+        // function changeQuantity(cartId, quantity) {
+        //     $.ajax({
+        //         url: `/cart/changequantity?id=${cartId}&quantity=${quantity}`,
+        //         dataType: "json",
+        //         type: 'PUT',
+        //         contentType: 'application/json; charset=utf-8',
+        //         async: true,
+        //         success: function (data) {
+        //             window.location.href = data.redirectToUrl;
+        //         },
+        //         error: function (xhr) {
+        //             showErrorToast('Có lỗi xảy ra trong quá trình xử lý.');
+        //         }
+        //     });
+        // }
+        // Xử lý số lượng sản phẩm
         $('.quantity button').on('click', function () {
             var button = $(this);
             let maxQuantity = parseInt(button.attr('max-quantity'));
-            var oldValue = button.parent().parent().find('input').val();
+            var oldValue = parseInt(button.parent().parent().find('input').val());
             let cartId = parseInt(button.attr('cart-id'));
             var newVal = 1;
 
             if (button.hasClass('btn-plus')) {
-                newVal = parseFloat(oldValue);
-
-                if (oldValue < maxQuantity) {
-                    newVal = parseFloat(oldValue) + 1;
-                    changeQuantity(cartId, newVal);
-                }
-                else if (oldValue > maxQuantity) {
-                    newVal = maxQuantity;
-                    changeQuantity(cartId, newVal);
-                }
+                newVal = oldValue < maxQuantity ? oldValue + 1 : maxQuantity;
             } else {
-                if (oldValue > maxQuantity) {
-                    newVal = maxQuantity;
-                    changeQuantity(cartId, newVal);
-                }
-                else if (oldValue > 1) {
-                    newVal = parseFloat(oldValue) - 1;
-                    changeQuantity(cartId, newVal);
-                }
-                else {
-                    newVal = 1;
-                }
+                newVal = oldValue > 1 ? oldValue - 1 : 1;
             }
-            button.parent().parent().find('input').val(newVal);
+
+            // Gọi hàm AJAX cập nhật số lượng mà không tải lại trang
+            changeQuantity(cartId, newVal, button);
         });
-        function changeQuantity(cartId, quantity) {
+
+        function changeQuantity(cartId, quantity, button) {
             $.ajax({
                 url: `/cart/changequantity?id=${cartId}&quantity=${quantity}`,
                 dataType: "json",
@@ -269,12 +229,14 @@
                 async: true,
                 success: function (data) {
                     window.location.href = data.redirectToUrl;
+                    
                 },
                 error: function (xhr) {
                     showErrorToast('Có lỗi xảy ra trong quá trình xử lý.');
                 }
             });
         }
+
     function removeFromCart(id) {
         if (confirm("Bạn có chắc muốn xóa sản phẩm khỏi giỏ hàng?")) {
             $.ajax({

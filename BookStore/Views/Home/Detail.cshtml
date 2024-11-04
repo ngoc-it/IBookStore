@@ -23,6 +23,16 @@
                     <div class="carousel-item w-100 h-100 active">
                         <img class="w-100 h-100 object-fit-contain" src="/uploads/@ViewBag.Book.BookImage" alt="Ảnh bìa sách">
                     </div>
+                    @if (!string.IsNullOrEmpty(ViewBag.Book.InfoImage))
+                    {
+                        var images = ViewBag.Book.InfoImage.Split(";");
+                        foreach (string image in images)
+                        {
+                            <div class="carousel-item w-100 h-100">
+                                <img class="w-100 h-100 object-fit-contain" src="/uploads/@image" alt="Ảnh sách">
+                            </div>
+                        }
+                    }
                 </div>
                 <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
                     <i class="fa fa-2x fa-angle-left text-dark"></i>

@@ -9,7 +9,7 @@
 }
 
 @section css {
-    <style>
+    @* <style>
         /* Thiết lập cơ bản cho form quản lý sách */
     .book-detail {
         margin-top: 20px;
@@ -112,7 +112,7 @@
 
 
 
-</style>
+</style> *@
 }
 
 <div class="d-flex align-items-center">
@@ -214,12 +214,12 @@
                 @Html.TextAreaFor(model => model.Description, new { @id = "FullDescription", @class = "form-control" })
                 
             </div>
-            @* <div class="mb-3">
+            <div class="mb-3">
                 <label class="form-label">Thêm hình ảnh sản phẩm</label>
                 <input class="form-control" accept=".png,.jpg" type="file" id="imgBookInfo" onchange="uploadBookImg(this)" />
                 @Html.ValidationMessageFor(m=>m.InfoImage, "", new { @class = "text-danger" })
                 @Html.HiddenFor(m => m.InfoImage)
-            </div> *@
+            </div>
             
 
             
@@ -244,7 +244,11 @@
     <script type="text/javascript">
         let bookInfoImg = [];
 
-        
+        if ('@Model.InfoImage') {
+            bookInfoImg = ('@Model.InfoImage').split(";");
+
+            bindingImageInfo();
+        }
 
         $('.img-book-upload').click(function () {
             $('#inpImgBook')[0].click();
@@ -307,7 +311,34 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+        function bindingImageInfo() {
+            $('#ctnBookImageInfo').empty();
 
+            if (bookInfoImg.length > 0) {
+                bookInfoImg.forEach(function (item) {
+                    $("#ctnBookImageInfo").append(`<div class="col-xl-6 col-md-12 border-end">
+                                                                <div class="mb-3 d-flex justify-content-between align-items-center">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <img src="/uploads/${item}" class="img-book-td border mx-1">
+                                                                        <p class="m-0 ms-2">${item}</p>
+                                                                    </div>
+                                                                    <a class="h-100 w-px-30 delete-img" imgname="${item}" title="Xóa"><i class="bx bx-trash me-1"></i></a>
+                                                                </div>
+                                                            </div>`
+                    );
+                });
+
+                $('#ctnBookImageInfo').delegate('a.delete-img', 'click', function (event) {
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
+
+                    let imgName = $(event.target).parent().attr('imgname');
+                    deleteBookImg(imgName);
+                });
+            }
+
+            $('input#InfoImage').val(bookInfoImg.join(';'));
+        }
         
         function deleteBookImg(img) {
             const index = bookInfoImg.indexOf(img);

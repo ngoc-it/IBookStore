@@ -2,7 +2,7 @@
 {
     public class Voucher : BaseData
     {
-        public int VoucherCode { get; set; }
+        public string VoucherCode { get; set; }
         public string VoucherName { get; set; }
         public int Quantity { get; set; } //số lượng mã
         public int UsedNumber { get; set; }  //số lượng mã đã dùng

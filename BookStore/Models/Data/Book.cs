@@ -6,7 +6,7 @@ namespace BookStore.Models.Data
     public class Book : BaseData
     {
         [Required(ErrorMessage = "Mã sách không để trống")]
-        public int BookId { get; set; } //Mã sách
+        public string BookId { get; set; } //Mã sách
 
         [Required(ErrorMessage ="Tên sách không được để trống")]
         [MaxLength(100,ErrorMessage ="Không vượt quá 100 ký tự")]

@@ -8,7 +8,7 @@ namespace BookStore.Models.Model
     {
         public List<CartItemModel> CartItems { get; set; } = new List<CartItemModel>();
         public int? VoucherId { get; set; }
-        public int? VoucherCode { get; set; }
+        public string? VoucherCode { get; set; }
         public int? DeliveryId { get; set; }
         public int ShipCost { get; set; }
         public int Discount { get; set; }

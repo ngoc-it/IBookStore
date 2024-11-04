@@ -4,6 +4,7 @@ using BookStore.Models.Code;
 using BookStore.Models.Data;
 using BookStore.Models.Model;
 using X.PagedList;
+using static BookStore.Constant.Enumerations;
 
 namespace BookStore.Models.Service
 {
@@ -36,9 +37,30 @@ namespace BookStore.Models.Service
             _orderDetailService = orderDetailService;
         }
 
-        public Task CancelOrder(int orderId, string reason)
+        public async Task CancelOrder(int orderId, string reason)
         {
-            throw new NotImplementedException();
+            var order = await _orderService.GetEntityById(orderId);
+
+            if (order != null)
+            {
+                order.Status = OrderStatus.Cancel;
+                order.CancelReason = reason;
+                await _orderService.Update(order);
+
+                // Update cộng lại số sách trong đơn vào số lượng
+                var orderDetail = await _orderDetailService.GetList(x => x.OrderId == order.Id);
+
+                foreach (var item in orderDetail)
+                {
+                    var book = await _bookService.GetEntityById(item.BookId);
+
+                    if (book != null)
+                    {
+                        book.Quantity += item.Quantity;
+                        await _bookService.Update(book);
+                    }
+                }
+            }
         }
 
         public async Task CreateNewOrder(int userId, CartConfirmModel model)

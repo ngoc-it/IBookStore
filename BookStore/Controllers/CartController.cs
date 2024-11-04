@@ -117,7 +117,7 @@ namespace BookStore.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Index(int voucherCode, int deliveryId)
+        public async Task<IActionResult> Index(string voucherCode, int deliveryId)
         {
             var userId = _userConfig.GetUserId();
             var cartList = await _cartService.GetList(x => x.UserId == userId);
@@ -135,7 +135,8 @@ namespace BookStore.Controllers
             }
 
             // Kiểm tra mã giảm giá dạng int
-            var voucher = await _voucherService.Get(x => x.IsActive && x.VoucherCode == voucherCode);
+            /* var voucher = await _voucherService.Get(x => x.IsActive && x.VoucherCode == voucherCode);*/
+            var voucher = await _voucherService.Get(x => x.IsActive && x.VoucherCode.Trim().ToLower().Equals(voucherCode.Trim().ToLower()));
 
             if (voucher == null)
             {
@@ -348,7 +349,7 @@ namespace BookStore.Controllers
                     TempData["ToastMessage"] = "Đã xác nhận đơn hàng.";
                     TempData["ToastType"] = Constants.Success;
 
-                    return RedirectToAction("Index", "Cart");
+                    return RedirectToAction("Waiting", "Cart");
                 }
             }
 
@@ -399,5 +400,150 @@ namespace BookStore.Controllers
 
             return lowerCase ? builder.ToString().ToLower() : builder.ToString();
         }
+
+        public async Task<IActionResult> Waiting(int? pageIndex)
+        {
+            ViewBag.ToastType = Constants.None;
+
+            if (TempData["ToastMessage"] != null && TempData["ToastType"] != null)
+            {
+                ViewBag.ToastMessage = TempData["ToastMessage"];
+                ViewBag.ToastType = TempData["ToastType"];
+
+                TempData.Remove("ToastMessage");
+                TempData.Remove("ToastType");
+            }
+
+            var userId = _userConfig.GetUserId();
+            ViewBag.CartCount = await _cartService.Count(x => x.UserId == userId);
+
+            var pagingResult = await _cartService.GetPagingOrder(Enumerations.OrderStatus.Waiting, pageIndex, userId);
+
+            return View(pagingResult);
+        }
+        public async Task<IActionResult> OrderComplete(int? pageIndex)
+        {
+            ViewBag.ToastType = Constants.None;
+
+            if (TempData["ToastMessage"] != null && TempData["ToastType"] != null)
+            {
+                ViewBag.ToastMessage = TempData["ToastMessage"];
+                ViewBag.ToastType = TempData["ToastType"];
+
+                TempData.Remove("ToastMessage");
+                TempData.Remove("ToastType");
+            }
+
+            var userId = _userConfig.GetUserId();
+            ViewBag.CartCount = await _cartService.Count(x => x.UserId == userId);
+
+            var pagingResult = await _cartService.GetPagingOrder(Enumerations.OrderStatus.Complete, pageIndex, userId);
+
+            return View(pagingResult);
+        }
+        public async Task<IActionResult> OrderCancel(int? pageIndex)
+        {
+            ViewBag.ToastType = Constants.None;
+
+            if (TempData["ToastMessage"] != null && TempData["ToastType"] != null)
+            {
+                ViewBag.ToastMessage = TempData["ToastMessage"];
+                ViewBag.ToastType = TempData["ToastType"];
+
+                TempData.Remove("ToastMessage");
+                TempData.Remove("ToastType");
+            }
+
+            var userId = _userConfig.GetUserId();
+            ViewBag.CartCount = await _cartService.Count(x => x.UserId == userId);
+
+            var pagingResult = await _cartService.GetPagingOrder(Enumerations.OrderStatus.Cancel, pageIndex, userId);
+
+            return View(pagingResult);
+        }
+        [HttpPut]
+        public async Task<IActionResult> CancelOrder(int orderId, ReasonCancel reason)
+        {
+            var redirectUrl = Url.Action("Index", "Cart");
+            var strReason = string.Empty;
+
+            switch (reason)
+            {
+                case ReasonCancel.ChangeInfo:
+                    strReason = "(người mua): Thay đổi thông tin giao hàng";
+                    break;
+                case ReasonCancel.NotBuy:
+                    strReason = "(người mua): Đổi ý, không muốn mua nữa";
+                    break;
+                case ReasonCancel.WrongOrder:
+                    strReason = "(người mua): Đặt nhầm sản phẩm";
+                    break;
+                case ReasonCancel.NotVoucher:
+                    strReason = "(người mua): Chưa áp mã giảm giá";
+                    break;
+                case ReasonCancel.Other:
+                    strReason = "(người mua): Lý do khác";
+                    break;
+            }
+
+            await _cartService.CancelOrder(orderId, strReason);
+
+            TempData["ToastMessage"] = "Đã hủy đơn hàng.";
+            TempData["ToastType"] = Constants.Success;
+
+            return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> CancelOrderShop(int orderId, ReasonCancelShop reason)
+        {
+            var redirectUrl = Url.Action("OrderCancel", "Admin");
+            var strReason = string.Empty;
+
+            switch (reason)
+            {
+                case ReasonCancelShop.SoldOut:
+                    strReason = "(người bán): Hết hàng";
+                    break;
+                case ReasonCancelShop.NoContact:
+                    strReason = "(người bán): Không liên hệ được khách hàng";
+                    break;
+                case ReasonCancelShop.Other:
+                    strReason = "(người bán): Lý do khác";
+                    break;
+            }
+
+            await _cartService.CancelOrder(orderId, strReason);
+
+            TempData["ToastMessage"] = "Đã hủy đơn hàng.";
+            TempData["ToastType"] = Constants.Success;
+
+            return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
+        }
+        [HttpPut]
+        public async Task<IActionResult> UpdateOrderStatus(int orderId, OrderStatus status)
+        {
+            var redirectUrl = string.Empty;
+            await _cartService.UpdateOrderStatus(orderId, status);
+
+            switch (status)
+            {
+                case OrderStatus.Shipping:
+                    TempData["ToastMessage"] = "Sẵn sàng bàn giao cho đơn vị vận chuyển.";
+                    TempData["ToastType"] = Constants.Success;
+
+                    redirectUrl = Url.Action("Delivering", "Admin");
+                    break;
+                case OrderStatus.Complete:
+                    TempData["ToastMessage"] = "Đơn hàng đã hoàn thành.";
+                    TempData["ToastType"] = Constants.Success;
+
+                    redirectUrl = Url.Action("Index", "Cart");
+                    break;
+            }
+
+            return Json(new { redirectToUrl = redirectUrl, status = Constants.Success });
+        }
+
     }
 }

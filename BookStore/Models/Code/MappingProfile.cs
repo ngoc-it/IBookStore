@@ -17,8 +17,10 @@ namespace BookStore.Models.Code
             CreateMap<User, UserInfomationModel>();
             CreateMap<Cart, CartModel>();
             CreateMap<CartModel, Cart>();
+            CreateMap<Order, OrderViewModel>();
+            CreateMap<OrderViewModel, Order>();
 
-            }
+        }
 
             
         }
