@@ -9,7 +9,7 @@ namespace BookStore.Models.Service
     {
         private readonly IMapper _mapper;
         private readonly IBaseService<Category> _cateService;
-        //private readonly IBaseService<BookReview> _reviewService;
+
 
         public BookService(IGenericRepository<Book> baseRepo, ILogger<Book> logger,
             IBaseService<Category> cateService,
@@ -18,6 +18,11 @@ namespace BookStore.Models.Service
         {
             _mapper = mapper;
             _cateService = cateService;
+        }
+
+        public List<Book> GetAllBooks()
+        {
+            return _baseRepo.GetDbSet().ToList();
         }
 
         public List<Book> GetBookActiveInCategoryActive(Expression<Func<Book, bool>> expresstion)

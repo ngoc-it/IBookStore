@@ -155,6 +155,16 @@
     <button type="button" class="btn btn-primary" style="height: fit-content;" onclick="location.href='/admin/bookdetail'">
         Thêm mới
     </button>
+    <div class="dropdown">
+        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownExportButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Xuất file
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownExportButton">
+            <li><a class="dropdown-item" href="javascript:void(0);" onclick="exportToPDF()">Xuất PDF</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0);" onclick="exportToExcel()">Xuất Excel</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0);" onclick="exportToWord()">Xuất Word</a></li>
+        </ul>
+    </div>
 </div>
 <div class="card">
     <div class="table-responsive text-nowrap">
@@ -232,6 +242,20 @@
 
 @section scripts {
     <script>
+        // function exportFile() {
+        //     window.location.href = '/report/exportbookreport';
+        // }
+        function exportToPDF() {
+            window.location.href = '/Report/ExportBookReport?format=pdf';
+        }
+
+        function exportToExcel() {
+            window.location.href = '/Report/ExportBookReport?format=excel';
+        }
+
+        function exportToWord() {
+            window.location.href = '/Report/ExportBookReport?format=word';
+        }
         function deleteBook(id) {
             if (confirm("Bạn có chắc muốn xóa cuốn sách này không?")) {
                 $.ajax({

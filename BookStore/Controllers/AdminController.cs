@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using AspNetCore.Reporting.ReportExecutionService;
+using AspNetCore.Reporting;
+using AutoMapper;
 using BookStore.Constant;
 using BookStore.Models.Code;
 using BookStore.Models.Data;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using X.PagedList;
 using static BookStore.Constant.Enumerations;
+
 
 
 namespace BookStore.Controllers
@@ -356,6 +359,7 @@ namespace BookStore.Controllers
             }
         }
         #endregion
+
         #region QUANLYNGUOIDUNG
         [HttpGet]
         [Authorize(Roles = Role.Admin)]
@@ -807,7 +811,6 @@ namespace BookStore.Controllers
         }
         #endregion
 
-
         #region GIỎ HÀNG
         //GET: /Admin/WaitingDelivery
         [HttpGet]
@@ -862,7 +865,15 @@ namespace BookStore.Controllers
             return View(pagingResult);
         }
         #endregion
+        #region TRANGTHONGKE
+/*        [HttpGet]
+        public async Task<IActionResult> Dashboard(int? viewType)
+        {
+            var model = await _adminService.GetDashboardOverview(viewType);
 
-
+            return View(model);
+        }
+*/
+        #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿@using BookStore.Constant;
-@using BookStore.Models.Model;
+﻿@using BookStore.Models.Model;
 @using System.Globalization;
 @using X.PagedList;
 @using X.PagedList.Mvc.Core;
@@ -7,11 +6,14 @@
 @model PagingModel<OrderViewModel>
 
 @{
-    ViewData["Title"] = "Chờ lấy hàng";
+    ViewData["Title"] = "Đã hủy";
 }
 
 @section css {
     <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+}
+
+@section scripts {
 }
 
 <!-- Cart Start -->
@@ -20,10 +22,10 @@
         <div class="col">
             <div class="nav nav-tabs justify-content-center border-secondary mb-4">
                 <a class="nav-item nav-link" href="/cart">Giỏ hàng</a>
-                <a class="nav-item nav-link active" href="#">Chờ lấy hàng</a>
+                <a class="nav-item nav-link" href="/cart/waiting">Chờ lấy hàng</a>
                 <a class="nav-item nav-link" href="/cart/delivering">Đang giao hàng</a>
                 <a class="nav-item nav-link" href="/cart/ordercomplete">Hoàn thành</a>
-                <a class="nav-item nav-link" href="/cart/ordercancel">Đã hủy</a>
+                <a class="nav-item nav-link active" href="#">Đã hủy</a>
             </div>
             <div class="tab-content">
                 <div class="tab-pane fade show active">
@@ -45,8 +47,9 @@
                             @foreach (var item in Model.DataPaging)
                             {
                                 <div class="card border-secondary mb-5">
-                                    <div class="card-header bg-secondary border-0">
+                                    <div class="card-header bg-secondary d-flex justify-content-between border-0 align-items-center">
                                         <h6 class="m-0"> Mã đơn hàng <b>#@item.OrderCode</b></h6>
+                                        <p class="ml-3 mb-0"><b>Lý do hủy:</b> <small>@item.CancelReason</small></p>
                                     </div>
                                     <div class="card-body">
                                         <div class="d-flex align-items-center mb-3">
@@ -104,10 +107,6 @@
                                         <h6 class="font-weight-medium">Hình thức thanh toán: <small>@item.PaymentName</small></h6>
                                         <h6 class="font-weight-medium">Ghi chú: <small>@item.OrderNote</small></h6>
                                     </div>
-
-                                    <button class="btn btn-block btn-primary mb-3 mr-3" onclick="cancelOrder(@item.Id)" style="width: fit-content; align-self: self-end;">
-                                        Hủy đơn hàng
-                                    </button>
                                 </div>
                             }
                         }
@@ -125,87 +124,3 @@
     </div>
 </div>
 <!-- Cart End -->
-<!-- Modal -->
-<div class="modal fade" id="cancelReasonModal" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Hủy đơn hàng</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col mb-3">
-                        <label class="form-label">Lý do hủy <span style="color: red;">*</span></label>
-                        <select class="form-select navbar-detached" id="selectReason">
-                            <option value="0">Chọn lý do hủy</option>
-                            <option value="@Enumerations.ReasonCancel.ChangeInfo">Thay đổi thông tin giao hàng</option>
-                            <option value="@Enumerations.ReasonCancel.NotBuy">Đổi ý, không muốn mua nữa</option>
-                            <option value="@Enumerations.ReasonCancel.WrongOrder">Đặt nhầm sản phẩm</option>
-                            <option value="@Enumerations.ReasonCancel.NotVoucher">Chưa áp mã giảm giá</option>
-                            <option value="@Enumerations.ReasonCancel.Other">Lý do khác</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer d-flex align-items-center">
-                <button type="button" class="btn btn-secondary mx-2" data-bs-dismiss="modal">Đóng</button>
-                <button id="btnSave" class="btn btn-primary" onclick="confirmCancel()">Xác nhận</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-@section scripts {
-    <script>
-        $('#cancelReasonModal #selectReason').on('click', function () {
-            $('#cancelReasonModal #selectReason').removeClass("is-invalid");
-        })
-
-        function cancelOrder(orderId) {
-            $('#cancelReasonModal #selectReason').attr("order-id", orderId);
-            $('#cancelReasonModal #selectReason').removeClass("is-invalid");
-
-            $('#cancelReasonModal').modal('show');
-        }
-
-        function confirmCancel() {
-            let reason = $('#cancelReasonModal #selectReason').find(":selected").val(),
-                orderId = parseInt($('#cancelReasonModal #selectReason').attr('order-id'));
-
-            if (reason && reason != "0") {
-                $.ajax({
-                    url: `/cart/CancelOrder?orderId=${orderId}&reason=${reason}`,
-                    dataType: "json",
-                    type: 'PUT',
-                    contentType: 'application/json; charset=utf-8',
-                    async: true,
-                    success: function (data) {
-                        window.location.href = data.redirectToUrl;
-                    },
-                    error: function (xhr) {
-                        showErrorToast('Có lỗi xảy ra trong quá trình xử lý.');
-                    }
-                });
-            }
-            else {
-                $('#cancelReasonModal #selectReason').addClass("is-invalid");
-            }
-        }
-
-        function showErrorToast(msg) {
-            $('.toast-placement').removeClass('bg-success').addClass('bg-danger');
-            $('.toast-placement .title').text('Thất bại');
-            $('.toast-placement .toast-body').text(msg);
-            $('.toast-placement').toast('show');
-        }
-
-        function showSuccessToast(msg) {
-            $('.toast-placement').removeClass('bg-danger').addClass('bg-success');
-            $('.toast-placement .title').text('Thành công');
-            $('.toast-placement .toast-body').text(msg);
-            $('.toast-placement').toast('show');
-        }
-    </script>
-}
