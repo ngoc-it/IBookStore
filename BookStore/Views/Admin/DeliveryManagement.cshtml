@@ -326,5 +326,20 @@
             $('.toast-placement .toast-body').text(msg);
             $('.toast-placement').toast('show');
         }
+        
+            document.getElementById('cost').addEventListener('input', function () {
+                const costInput = document.getElementById('cost');
+                const errorSpan = document.querySelector('[field="cost"].field-validation-valid');
+
+                if (costInput.value < 0) {
+                    errorSpan.textContent = "Phí vận chuyển không được âm.";
+                    costInput.classList.add('is-invalid'); // Thêm hiệu ứng báo lỗi
+                } else {
+                    errorSpan.textContent = "";
+                    costInput.classList.remove('is-invalid'); // Xóa hiệu ứng báo lỗi
+                }
+            });
+    
+
     </script>
 }

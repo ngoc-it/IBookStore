@@ -7,5 +7,7 @@ namespace BookStore.Models.Service
     {
         List<Book> GetBookActiveInCategoryActive(Expression<Func<Book, bool>> expresstion);
         List<Book> GetAllBooks();
+
+
     }
 }

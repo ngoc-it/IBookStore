@@ -482,10 +482,10 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>dsSach</DataSetName>
-        <Top>0.73611in</Top>
-        <Left>0.1302in</Left>
+        <Top>1.14361in</Top>
+        <Left>0.90103in</Left>
         <Height>0.74528in</Height>
-        <Width>5.8879in</Width>
+        <Width>5.88787in</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -510,8 +510,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>0.21528in</Top>
-        <Left>2.12524in</Left>
+        <Top>0.66667in</Top>
+        <Left>2.82068in</Left>
         <Height>0.25in</Height>
         <Width>2.04167in</Width>
         <ZIndex>1</ZIndex>
@@ -540,7 +540,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox2</rd:DefaultName>
-        <Top>1.71528in</Top>
+        <Top>1.95834in</Top>
         <Left>3.69568in</Left>
         <Height>0.25in</Height>
         <Width>1.16667in</Width>
@@ -585,6 +585,51 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
+      <Textbox Name="Textbox5">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Vĩnh Long, ngày... tháng... năm</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox5</rd:DefaultName>
+        <Top>0.21528in</Top>
+        <Left>5.25818in</Left>
+        <Height>0.25in</Height>
+        <Width>2.32242in</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Image Name="Image1">
+        <Source>Embedded</Source>
+        <Value>logoimg</Value>
+        <Sizing>FitProportional</Sizing>
+        <Top>0.05556in</Top>
+        <Left>0.1302in</Left>
+        <Height>0.5in</Height>
+        <Width>1.34028in</Width>
+        <ZIndex>5</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Image>
     </ReportItems>
     <Height>2.88889in</Height>
     <Style />
@@ -595,52 +640,6 @@
       <Height>0.82861in</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
-      <ReportItems>
-        <Image Name="Image1">
-          <Source>Embedded</Source>
-          <Value>logoimg</Value>
-          <Sizing>FitProportional</Sizing>
-          <Top>0.17583in</Top>
-          <Left>0.1302in</Left>
-          <Height>0.5in</Height>
-          <Width>1.34028in</Width>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-          </Style>
-        </Image>
-        <Textbox Name="Textbox5">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Vĩnh Long, ngày... tháng... năm</Value>
-                  <Style />
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox5</rd:DefaultName>
-          <Top>0.42583in</Top>
-          <Left>3.69568in</Left>
-          <Height>0.25in</Height>
-          <Width>2.32242in</Width>
-          <ZIndex>1</ZIndex>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-            <PaddingLeft>2pt</PaddingLeft>
-            <PaddingRight>2pt</PaddingRight>
-            <PaddingTop>2pt</PaddingTop>
-            <PaddingBottom>2pt</PaddingBottom>
-          </Style>
-        </Textbox>
-      </ReportItems>
       <Style>
         <Border>
           <Style>None</Style>

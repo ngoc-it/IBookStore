@@ -24,6 +24,11 @@ namespace BookStore.Models.Service
         {
             return _baseRepo.GetDbSet().ToList();
         }
+ /*       public List<Book> GetAllBooks()
+{
+    return _baseRepo.GetDbSet().Where(b => b.IsActive && b.Quantity > 0).ToList();
+}
+*/
 
         public List<Book> GetBookActiveInCategoryActive(Expression<Func<Book, bool>> expresstion)
         {
@@ -39,5 +44,8 @@ namespace BookStore.Models.Service
             return bookActive.ToList();
         }
 
+       
+
     }
-}
+    }
+    

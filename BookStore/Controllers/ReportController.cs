@@ -23,9 +23,13 @@ namespace BookStore.Controllers
         }*/
         public IActionResult ExportBookReport()
         {
-            // Lấy dữ liệu từ BookService
-            var books = _bookService.GetAllBooks();
             var format = Request.Query["format"].ToString();
+            var categoryId = Request.Query["categoryId"].ToString();
+
+            // Lọc sách theo danh mục nếu có
+            var books = string.IsNullOrEmpty(categoryId) || categoryId == "0"
+                ? _bookService.GetAllBooks() // Tất cả sách
+                : _bookService.GetAllBooks().Where(x => x.CategoryId.ToString() == categoryId).ToList();
             // Khởi tạo DataTable để chứa dữ liệu báo cáo
             DataTable dataTable = new DataTable("dsSach");
             /*dataTable.Columns.Add("BookImage", typeof(string));*/
@@ -36,7 +40,7 @@ namespace BookStore.Controllers
             dataTable.Columns.Add("SoldQuantity", typeof(int));
             dataTable.Columns.Add("Price", typeof(decimal));
             dataTable.Columns.Add("PriceDiscount", typeof(decimal));
-/*            dataTable.Columns.Add("IsActive", typeof(bool));*/
+            /*            dataTable.Columns.Add("IsActive", typeof(bool));*/
 
             foreach (var book in books)
             {
@@ -49,7 +53,7 @@ namespace BookStore.Controllers
                     book.SoldQuantity,
                     book.Price,
                     book.PriceDiscount
-/*                    book.IsActive*/
+                /*                    book.IsActive*/
                 );
             }
 

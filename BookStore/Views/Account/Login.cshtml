@@ -6,6 +6,31 @@
     Layout = null;
 }
 
+@section css {
+
+    <style>
+        .toast-placement {
+            position: fixed;
+            z-index: 1055;
+            top: 1rem;
+            right: 1rem;
+            margin-right: 1rem;
+            margin-top: 1rem;
+        }
+
+        .toast-header {
+            background-color: transparent;
+            border-bottom: none;
+            color: #ffffff; /* Màu chữ trắng */
+        }
+
+        .toast-body {
+            background-color: transparent;
+            font-size: 14px;
+            color: #ffffff; /* Màu chữ trắng */
+        }
+    </style>
+}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -92,18 +117,20 @@
                 </div>
             </div>
         </div>
-     @*    Kiểm tra xem có thông báo thành công nào không
-        @{
-            var successMessage = TempData["SuccessMessage"] as string;
-        }
-
-        @if (!string.IsNullOrEmpty(successMessage))
-        {
-            <script type="text/javascript">
-                alert("@successMessage");
-                window.location.href = "@ViewData["ReturnUrl"]"; // Chuyển hướng ngay sau khi hiển thị thông báo
-            </script>
-        } *@
+        <div class="bs-toast toast toast-placement @(ViewBag.ToastType?.ToString() == Constants.Success ? "bg-success" : "bg-danger") top-0 end-0 mr-3 mt-3"
+             role="alert"
+             aria-live="assertive"
+             aria-atomic="true"
+             data-delay="3000">
+            <div class="toast-header">
+                <i class="bx bx-bell mr-2"></i>
+                <div class="me-auto fw-semibold">@(ViewBag.ToastType?.ToString() == Constants.Success ? "Thành công" : "Thất bại")</div>
+            </div>
+            <div class="toast-body">
+                @ViewBag.ToastMessage
+            </div>
+        </div>
+    </div>
 
 
 
@@ -118,7 +145,19 @@
     <script src="~/js/sb-admin-2.js"></script>
 
 
-
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Kiểm tra nếu có toast message trong TempData
+            if ('@ViewBag.ToastType' && '@ViewBag.ToastType' != 'None') {
+                // Hiển thị toast message
+                $('.toast-placement').toast('show');
+            }
+        });
+    </script>
+    @{
+        ViewBag.ToastType = Constants.None;
+        ViewBag.ToastMessage = string.Empty;
+    }
 
 
 

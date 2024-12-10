@@ -17,7 +17,7 @@
 }
 
 @section css {
-    <style>
+   @*  <style>
         /* CSS for User Management Page */
 .book-management {
     padding: 20px;
@@ -132,7 +132,7 @@
     }
 }
 
-    </style>
+    </style> *@
 
 }
 
@@ -168,7 +168,6 @@
                         <th>Họ</th>
                         <th>Tên</th>
                         <th>Email</th>
-                        <th>Đơn hàng</th>
                         <th>Phân quyền</th>
                         <th>Ngày đăng ký</th>
                         <th class="action">Hành động</th>
@@ -185,7 +184,6 @@
                                     <td>@item.FirstName</td>
                                     <td>@item.LastName</td>
                                     <td>@item.Email</td>
-                                    <td>@item.TotalOrder</td>
                                     <td>@item.RoleName</td>
                                     <td>@(item.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture))</td>
                                     <td class="action">

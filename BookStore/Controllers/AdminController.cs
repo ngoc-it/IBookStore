@@ -866,14 +866,14 @@ namespace BookStore.Controllers
         }
         #endregion
         #region TRANGTHONGKE
-/*        [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Dashboard(int? viewType)
         {
             var model = await _adminService.GetDashboardOverview(viewType);
 
             return View(model);
         }
-*/
+
         #endregion
     }
 }
